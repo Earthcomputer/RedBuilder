@@ -1,0 +1,16 @@
+[
+{
+  "modid": "redbuilder",
+  "name": "Red Builder",
+  "description": "Helps make building redstone contraptions more efficient",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Earthcomputer"],
+  "credits": "Earthcomputer",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
