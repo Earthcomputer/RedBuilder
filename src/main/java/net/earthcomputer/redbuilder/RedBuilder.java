@@ -19,5 +19,6 @@ public class RedBuilder {
 	@EventHandler
 	public void preinit(FMLPreInitializationEvent e) {
 		MinecraftForge.EVENT_BUS.register(new BetterMiddleClickListener());
+		MinecraftForge.EVENT_BUS.register(ChatBlocker.INSTANCE);
 	}
 }

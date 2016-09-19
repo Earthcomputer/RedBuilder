@@ -142,6 +142,7 @@ public class BetterMiddleClickListener {
 			if (newValue == 0) {
 				IBlockState newState = pendingBlockPlacements.remove(pos);
 				if (world.getBlockState(pos).getBlock() == newState.getBlock()) {
+					ChatBlocker.blockNextTranslation("commands.setblock.success");
 					Minecraft.getMinecraft().thePlayer.sendChatMessage(String.format("/setblock %d %d %d %s %d",
 							pos.getX(), pos.getY(), pos.getZ(), Block.REGISTRY.getNameForObject(newState.getBlock()),
 							newState.getBlock().getMetaFromState(newState)));
