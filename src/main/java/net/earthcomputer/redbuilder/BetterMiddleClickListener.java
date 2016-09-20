@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
@@ -157,7 +156,7 @@ public class BetterMiddleClickListener {
 
 	@SubscribeEvent
 	public void onPlayerChangedDimension(PlayerChangedDimensionEvent e) {
-		if (e.player instanceof EntityPlayerMP) {
+		if (e.player != Minecraft.getMinecraft().thePlayer) {
 			return;
 		}
 		clearPendingBlocks();
@@ -165,7 +164,7 @@ public class BetterMiddleClickListener {
 
 	@SubscribeEvent
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent e) {
-		if (e.player instanceof EntityPlayerMP) {
+		if (e.player != Minecraft.getMinecraft().thePlayer) {
 			return;
 		}
 		clearPendingBlocks();
@@ -173,7 +172,7 @@ public class BetterMiddleClickListener {
 
 	@SubscribeEvent
 	public void onPlayerRespawned(PlayerRespawnEvent e) {
-		if (e.player instanceof EntityPlayerMP) {
+		if (e.player != Minecraft.getMinecraft().thePlayer) {
 			return;
 		}
 		clearPendingBlocks();
