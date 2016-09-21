@@ -42,6 +42,11 @@ public class BetterMiddleClickListener {
 		if (e.phase != Phase.END) {
 			return;
 		}
+		
+		if (!RedBuilderSettings.enableAdvancedMiddleClick) {
+			return;
+		}
+		
 		Minecraft mc = Minecraft.getMinecraft();
 		World world = mc.theWorld;
 		AbstractClientPlayer player = mc.thePlayer;
