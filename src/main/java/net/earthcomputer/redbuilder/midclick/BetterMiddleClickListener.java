@@ -1,9 +1,11 @@
-package net.earthcomputer.redbuilder;
+package net.earthcomputer.redbuilder.midclick;
 
 import java.util.Map;
 
 import com.google.common.collect.Maps;
 
+import net.earthcomputer.redbuilder.ChatBlocker;
+import net.earthcomputer.redbuilder.RedBuilderSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
