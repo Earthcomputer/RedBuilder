@@ -1,19 +1,27 @@
 package net.earthcomputer.redbuilder;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.base.Throwables;
+
 import net.earthcomputer.redbuilder.midclick.BetterMiddleClickListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.FMLModContainer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = RedBuilder.MODID, name = RedBuilder.NAME, version = RedBuilder.VERSION, clientSideOnly = true, guiFactory = "net.earthcomputer.redbuilder.RedBuilderGuiFactory")
@@ -39,9 +47,33 @@ public class RedBuilder {
 
 	@NetworkCheckHandler
 	public boolean acceptsRemote(Map<String, String> remoteMods, Side remoteSide) {
+		Field descriptorField = ReflectionHelper.findField(FMLModContainer.class, "descriptor");
+		// These mods are allowed to be on the server side even though they are
+		// not client-side-only
+		List<String> allowedRemoteMods = Arrays.asList("mcp", "fml", "forge");
+
 		for (String remoteMod : remoteMods.keySet()) {
-			if (Loader.isModLoaded(remoteMod) && !remoteMod.equals(MODID)) {
-				return false;
+			if (Loader.isModLoaded(remoteMod) && !allowedRemoteMods.contains(remoteMod)) {
+				// We have this mod on both the client and server, check if it's
+				// client-side-only
+				ModContainer mod = Loader.instance().getIndexedModList().get(remoteMod);
+				if (mod instanceof FMLModContainer) {
+					Map<?, ?> descriptor;
+					try {
+						descriptor = (Map<?, ?>) descriptorField.get(mod);
+					} catch (Exception e) {
+						throw Throwables.propagate(e);
+					}
+					Boolean isClientOnly = (Boolean) descriptor.get("clientSideOnly");
+					if (isClientOnly != Boolean.TRUE) {
+						// Not client-side-only we have a mod that modifies both
+						// the client and the server and hence could mess up Red
+						// Builder
+						return false;
+					}
+				} else {
+					// Not made with a @Mod annotation, assume it's okay
+				}
 			}
 		}
 		return true;
