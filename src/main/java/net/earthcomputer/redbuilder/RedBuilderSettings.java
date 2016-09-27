@@ -10,6 +10,7 @@ public class RedBuilderSettings {
 	public static final RedBuilderSettings INSTANCE = new RedBuilderSettings();
 
 	public static boolean enableAdvancedMiddleClick;
+	public static boolean enableRedstonePowerInfo;
 
 	private RedBuilderSettings() {
 	}
@@ -18,6 +19,9 @@ public class RedBuilderSettings {
 		enableAdvancedMiddleClick = getProp(config, "features", "advancedMiddleClick", "true",
 				"Whether any block can be Ctrl + pick-blocked (not just tile entities)", Property.Type.BOOLEAN)
 						.getBoolean();
+		enableRedstonePowerInfo = getProp(config, "features", "redstonePowerInfo", "false",
+				"Whether to display the inputs and outputs of a redstone component when they are hovered over",
+				Property.Type.BOOLEAN).getBoolean();
 
 		if (config.hasChanged()) {
 			config.save();

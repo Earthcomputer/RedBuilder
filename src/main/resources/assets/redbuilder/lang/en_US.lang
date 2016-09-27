@@ -2,5 +2,6 @@ redbuilder.configgui.title=Red Builder Configuration
 redbuilder.configgui.ctgy.features=Features
 redbuilder.configgui.ctgy.features.tooltip=Enable/Disable Red Builder features
 redbuilder.configgui.features.advancedMiddleClick=Enable Advaned Middle Click
+redbuilder.configgui.features.redstonePowerInfo=Enable Redstone Power Info
 
 redbuilder.noCommandPermission=You need to have cheats enabled to use this function

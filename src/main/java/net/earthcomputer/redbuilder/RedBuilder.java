@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Throwables;
 
+import net.earthcomputer.redbuilder.logic.RedstoneLogicDisplayListener;
 import net.earthcomputer.redbuilder.midclick.BetterMiddleClickListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -83,6 +84,7 @@ public class RedBuilder {
 	public void preinit(FMLPreInitializationEvent e) {
 		MinecraftForge.EVENT_BUS.register(new BetterMiddleClickListener());
 		MinecraftForge.EVENT_BUS.register(ChatBlocker.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(new RedstoneLogicDisplayListener());
 		MinecraftForge.EVENT_BUS.register(RedBuilderSettings.INSTANCE);
 
 		config = new Configuration(e.getSuggestedConfigurationFile());
