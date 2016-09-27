@@ -1,7 +1,5 @@
 package net.earthcomputer.redbuilder.logic;
 
-import org.lwjgl.opengl.GL11;
-
 import net.earthcomputer.redbuilder.RedBuilderSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,13 +7,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RedstoneLogicDisplayListener {
 
 	@SubscribeEvent
-	public void onRenderBlockOverlay(RenderWorldLastEvent e) {
+	public void onRenderBlockOverlay(DrawBlockHighlightEvent e) {
 		if (!RedBuilderSettings.enableRedstonePowerInfo) {
 			return;
 		}
@@ -37,10 +35,12 @@ public class RedstoneLogicDisplayListener {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0.5 - player.posX, -player.posY, 0.5 - player.posZ);
 
-		GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+		GlStateManager.disableDepth();
+		GlStateManager.glLineWidth(8);
 		for (PowerPath path : powerInfo.genPowerPaths(world, pos, world.getBlockState(pos))) {
 			path.draw();
 		}
+		GlStateManager.enableDepth();
 
 		GlStateManager.popMatrix();
 	}
