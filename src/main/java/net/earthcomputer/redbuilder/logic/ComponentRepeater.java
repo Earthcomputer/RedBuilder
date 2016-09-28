@@ -12,7 +12,7 @@ public class ComponentRepeater implements IRedstoneComponent {
 	@Override
 	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
 		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
-		EnumFacing repeaterFacing = state.getValue(BlockRedstoneRepeater.FACING);
+		EnumFacing repeaterFacing = state.getValue(BlockRedstoneRepeater.FACING).getOpposite();
 
 		powerInfo.canBePoweredBy(repeaterFacing.getOpposite());
 		powerInfo.canBePoweredByStrongly(repeaterFacing.rotateY());

@@ -3,6 +3,7 @@ package net.earthcomputer.redbuilder.logic;
 import java.util.EnumMap;
 import java.util.Set;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -180,6 +181,12 @@ public class RedstonePowerInfo {
 		return paths;
 	}
 
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("strongOutputs", strongOutputs).add("weakOutputs", weakOutputs)
+				.add("powerRequirements", powerRequirements).toString();
+	}
+
 	public static class PowerRequirement {
 		private BlockPos origin;
 		private EnumFacing direction;
@@ -232,6 +239,12 @@ public class RedstonePowerInfo {
 			if (requireStrong != other.requireStrong)
 				return false;
 			return true;
+		}
+
+		@Override
+		public String toString() {
+			return Objects.toStringHelper(this).add("origin", origin).add("direction", direction)
+					.add("requireStrong", requireStrong).toString();
 		}
 	}
 
