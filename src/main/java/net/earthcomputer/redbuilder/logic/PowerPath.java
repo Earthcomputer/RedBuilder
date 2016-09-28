@@ -60,10 +60,12 @@ public class PowerPath {
 	}
 
 	private void drawPoint(VertexBuffer buffer, BlockPos point, int color) {
-		buffer.pos(point.getX(), point.getY() + 0.5, point.getZ());
-		buffer.color((color & 0x00ff0000) >> 16, (color & 0x0000ff00) >> 8, color & 0x000000ff,
-				(color & 0xff000000) >>> 24);
-		buffer.endVertex();
+		// @formatter:off
+		buffer.pos(point.getX(), point.getY() + 0.5, point.getZ())
+			.color((color & 0x00ff0000) >> 16, (color & 0x0000ff00) >> 8, color & 0x000000ff,
+				(color & 0xff000000) >>> 24)
+			.endVertex();
+		// @formatter:on
 	}
 
 	@Override

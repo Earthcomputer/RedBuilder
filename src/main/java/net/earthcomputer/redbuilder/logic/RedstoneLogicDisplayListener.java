@@ -35,11 +35,14 @@ public class RedstoneLogicDisplayListener {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0.5 - player.posX, -player.posY, 0.5 - player.posZ);
 
+		GlStateManager.disableBlend();
 		GlStateManager.disableDepth();
+		GlStateManager.disableTexture2D();
 		GlStateManager.glLineWidth(8);
 		for (PowerPath path : powerInfo.genPowerPaths(world, pos, world.getBlockState(pos))) {
 			path.draw();
 		}
+		GlStateManager.enableBlend();
 		GlStateManager.enableDepth();
 
 		GlStateManager.popMatrix();
