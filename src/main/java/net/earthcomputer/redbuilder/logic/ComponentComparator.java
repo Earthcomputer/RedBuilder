@@ -1,6 +1,8 @@
 package net.earthcomputer.redbuilder.logic;
 
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import com.google.common.base.Predicate;
 
@@ -15,13 +17,15 @@ import net.minecraft.world.World;
 
 public class ComponentComparator implements IRedstoneComponent {
 
+	private static final Random random = new Random(0);
+	
 	@Override
 	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
-		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
+		ComparatorPowerInfo powerInfo = new ComparatorPowerInfo();
 		EnumFacing comparatorFacing = state.getValue(BlockRedstoneComparator.FACING).getOpposite();
 
-		int inputOverride = getInputOverride(world, pos, comparatorFacing);
-		if (inputOverride == -1) {
+		boolean hasInputOverride = getInputOverride(world, pos, comparatorFacing, powerInfo);
+		if (!hasInputOverride) {
 			powerInfo.canBePoweredBy(comparatorFacing.getOpposite());
 		}
 
@@ -39,52 +43,61 @@ public class ComponentComparator implements IRedstoneComponent {
 			powerInfo.canBePoweredByStrongly(sideFacing);
 		}
 
-		int power = calcComparatorPower(world, pos, state, comparatorFacing, inputOverride);
+		int power = calcComparatorPower(world, pos, state, comparatorFacing, hasInputOverride);
 		if (power > 0) {
 			powerInfo.powerStrong(comparatorFacing, power);
 		}
 		return powerInfo;
 	}
 
-	private int getInputOverride(World world, BlockPos pos, final EnumFacing comparatorFacing) {
-		EnumFacing backwardsFacing = comparatorFacing.getOpposite();
+	private boolean getInputOverride(World world, BlockPos pos, EnumFacing comparatorFacing,
+			ComparatorPowerInfo powerInfo) {
+		final EnumFacing backwardsFacing = comparatorFacing.getOpposite();
 		BlockPos testingPos = pos.offset(backwardsFacing);
 		IBlockState testingBlock = world.getBlockState(testingPos);
 		if (testingBlock.hasComparatorInputOverride()) {
-			return testingBlock.getComparatorInputOverride(world, testingPos);
+			powerInfo.setInputOverride(testingPos);
+			return true;
 		}
 
 		if (testingBlock.isNormalCube()) {
 			if (world.getRedstonePower(pos, comparatorFacing) >= 15) {
-				return -1;
+				return false;
 			}
 
 			testingPos = testingPos.offset(backwardsFacing);
 			testingBlock = world.getBlockState(testingPos);
 			if (testingBlock.hasComparatorInputOverride()) {
-				return testingBlock.getComparatorInputOverride(world, testingPos);
+				powerInfo.setInputOverride(testingPos);
+				return true;
 			}
 
 			List<EntityItemFrame> itemFrameList = world.getEntitiesWithinAABB(EntityItemFrame.class,
 					new AxisAlignedBB(testingPos), new Predicate<EntityItemFrame>() {
 						@Override
 						public boolean apply(EntityItemFrame itemFrame) {
-							return itemFrame != null && itemFrame.getHorizontalFacing() == comparatorFacing;
+							return itemFrame != null && itemFrame.getHorizontalFacing() == backwardsFacing;
 						}
 					});
 			if (itemFrameList.size() == 1) {
-				return itemFrameList.get(0).getAnalogOutput();
+				powerInfo.setInputOverride(testingPos);
+				return true;
 			}
 		}
-		return -1;
+		return false;
 	}
 
 	private int calcComparatorPower(World world, BlockPos pos, IBlockState state, EnumFacing comparatorFacing,
-			int inputOverride) {
+			boolean hasInputOverride) {
 		EnumFacing backwardsFacing = comparatorFacing.getOpposite();
 
-		int input = inputOverride == -1 ? world.getRedstonePower(pos.offset(backwardsFacing), backwardsFacing)
-				: inputOverride;
+		int input;
+		if (hasInputOverride) {
+			random.setSeed(world.getTotalWorldTime() * 69);
+			input = random.nextInt(14) + 1;
+		} else {
+			input = world.getRedstonePower(pos.offset(backwardsFacing), backwardsFacing);
+		}
 		int sidePower = Math.max(getSidePower(world, pos, comparatorFacing.rotateY()),
 				getSidePower(world, pos, comparatorFacing.rotateYCCW()));
 
@@ -103,6 +116,25 @@ public class ComponentComparator implements IRedstoneComponent {
 			return 15;
 		} else {
 			return world.getStrongPower(offsetPos, sideFacing);
+		}
+	}
+
+	private static class ComparatorPowerInfo extends RedstonePowerInfo {
+		private BlockPos inputOverrideOrigin;
+
+		public void setInputOverride(BlockPos source) {
+			this.inputOverrideOrigin = source;
+		}
+
+		@Override
+		public Set<PowerPath> genPowerPaths(World world, BlockPos pos, IBlockState state) {
+			Set<PowerPath> paths = super.genPowerPaths(world, pos, state);
+
+			if (inputOverrideOrigin != null) {
+				paths.add(PowerPath.startPoint(inputOverrideOrigin).add(pos, PowerPathColors.COMPARATOR_READING));
+			}
+
+			return paths;
 		}
 	}
 

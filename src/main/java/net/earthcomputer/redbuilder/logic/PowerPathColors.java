@@ -9,8 +9,7 @@ public class PowerPathColors {
 	public static final int INPUT_MAX = 0xffff0000;
 	public static final int OUTPUT_MIN = 0xff000040;
 	public static final int OUTPUT_MAX = 0xff0000ff;
-	public static final int COMPARATOR_READING_MIN = 0xff400060;
-	public static final int COMPARATOR_READING_MAX = 0xff8000cc;
+	public static final int COMPARATOR_READING = 0xff8000cc;
 
 	public static int interpolate(int minColor, int maxColor, int value) {
 		return interpolate(minColor, maxColor, value, 0, 15);
