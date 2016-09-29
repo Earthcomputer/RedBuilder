@@ -106,6 +106,10 @@ public class RedstonePowerInfo {
 		return true;
 	}
 
+	public boolean isValidPowerOutput(World world, BlockPos thisPos, BlockPos otherPos) {
+		return true;
+	}
+
 	public Set<PowerPath> genPowerPaths(World world, BlockPos pos, IBlockState state) {
 		Set<PowerPath> paths = Sets.newHashSet();
 		// Power inputs
@@ -159,7 +163,9 @@ public class RedstonePowerInfo {
 			}
 			int strongPower = strongOutputs.get(side);
 			int color = PowerPathColors.interpolate(PowerPathColors.OUTPUT_MIN, PowerPathColors.OUTPUT_MAX, weakPower);
-			paths.add(PowerPath.startPoint(pos).add(offsetPos, color));
+			if (isValidPowerOutput(world, pos, offsetPos)) {
+				paths.add(PowerPath.startPoint(pos).add(offsetPos, color));
+			}
 			if (strongPower == 0) {
 				continue;
 			}
@@ -173,6 +179,9 @@ public class RedstonePowerInfo {
 					continue;
 				}
 				if (world.getBlockState(secondaryOffsetPos).isNormalCube()) {
+					continue;
+				}
+				if (!isValidPowerOutput(world, pos, secondaryOffsetPos)) {
 					continue;
 				}
 				paths.add(PowerPath.startPoint(offsetPos).add(secondaryOffsetPos, color));
