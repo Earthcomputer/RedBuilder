@@ -3,5 +3,12 @@ redbuilder.configgui.ctgy.features=Features
 redbuilder.configgui.ctgy.features.tooltip=Enable/Disable Red Builder features
 redbuilder.configgui.features.advancedMiddleClick=Enable Advaned Middle Click
 redbuilder.configgui.features.redstonePowerInfo=Enable Redstone Power Info
+redbuilder.configgui.features.antiWater=AntiWater Setting
+redbuilder.configgui.features.antiWater.none=Neither
+redbuilder.configgui.features.antiWater.water_only=Water Only
+redbuilder.configgui.features.antiWater.lava_only=Lava Only
+redbuilder.configgui.features.antiWater.both=Both
 
 redbuilder.noCommandPermission=You need to have cheats enabled to use this function
+redbuilder.noCommandPermission.antiwater=You need to have cheats enabled to use AntiWater
+redbuilder.antiwater.warning=AntiWater has been used! This contraption will not work in survival!
