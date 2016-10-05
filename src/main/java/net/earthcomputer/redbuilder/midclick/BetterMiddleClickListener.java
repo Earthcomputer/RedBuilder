@@ -30,6 +30,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class BetterMiddleClickListener {
@@ -44,11 +45,11 @@ public class BetterMiddleClickListener {
 		if (e.phase != Phase.END) {
 			return;
 		}
-		
+
 		if (!RedBuilderSettings.enableAdvancedMiddleClick) {
 			return;
 		}
-		
+
 		Minecraft mc = Minecraft.getMinecraft();
 		World world = mc.theWorld;
 		AbstractClientPlayer player = mc.thePlayer;
@@ -85,7 +86,7 @@ public class BetterMiddleClickListener {
 		}
 
 		pickBlock.setTagInfo("PickedBlock",
-				new NBTTagString(Block.REGISTRY.getNameForObject(state.getBlock()).toString()));
+				new NBTTagString(ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString()));
 		pickBlock.setTagInfo("StateData", new NBTTagByte((byte) state.getBlock().getMetaFromState(state)));
 
 		NBTTagCompound display = new NBTTagCompound();
@@ -148,10 +149,7 @@ public class BetterMiddleClickListener {
 			if (newValue == 0) {
 				IBlockState newState = pendingBlockPlacements.remove(pos);
 				if (world.getBlockState(pos).getBlock() == newState.getBlock()) {
-					ChatBlocker.blockCommandFeedback("commands.setblock.success", "commands.setblock.noChange");
-					Minecraft.getMinecraft().thePlayer.sendChatMessage(String.format("/setblock %d %d %d %s %d",
-							pos.getX(), pos.getY(), pos.getZ(), Block.REGISTRY.getNameForObject(newState.getBlock()),
-							newState.getBlock().getMetaFromState(newState)));
+					ChatBlocker.setBlock(pos, newState);
 				}
 			} else {
 				newMap.put(pos, newValue);
