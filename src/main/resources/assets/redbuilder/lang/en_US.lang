@@ -16,3 +16,8 @@ redbuilder.getTileEntityData.tooManyPossibilities=Tried to get tile entity data 
 
 redbuilder.noCommandPermission=You need to have cheats enabled to use this function
 redbuilder.noCommandPermission.antiwater=You need to have cheats enabled to use AntiWater
+
+redbuilder.wrench.y_axis=Wrench (Horizontal Mode)
+redbuilder.wrench.facing_axis=Wrench (Forward Mode)
+redbuilder.wrench.perpendicular_facing_axis=Wrench (LeftToRight Mode)
+redbuilder.wrench.tileentity=Cannot use wrench on tile entities

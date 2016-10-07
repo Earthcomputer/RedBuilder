@@ -57,7 +57,9 @@ public class RedBuilder {
 		MinecraftForge.EVENT_BUS.register(new BetterMiddleClickListener());
 		MinecraftForge.EVENT_BUS.register(new RedstoneLogicDisplayListener());
 		MinecraftForge.EVENT_BUS.register(new AntiWaterEventListener());
-		
+		MinecraftForge.EVENT_BUS.register(new WrenchEventListener());
+		WrenchEventListener.registerHackItems();
+
 		MinecraftForge.EVENT_BUS.register(ChatBlocker.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(RedBuilderSettings.INSTANCE);
 
