@@ -1,22 +1,25 @@
 package net.earthcomputer.redbuilder;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer.EnumChatVisibility;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
@@ -34,15 +37,21 @@ public class ChatBlocker {
 	@SubscribeEvent
 	public void chatReceived(ClientChatReceivedEvent e) {
 		ITextComponent message = e.getMessage();
-		Iterator<Function<ITextComponent, ITextComponent>> chatFunctionItr = chatFunctions.iterator();
-		while (chatFunctionItr.hasNext()) {
-			ITextComponent newMessage = chatFunctionItr.next().apply(message);
+		ITextComponent newMessage = message;
+		Function<ITextComponent, ITextComponent> functionToRemove = null;
+		for (Function<ITextComponent, ITextComponent> function : chatFunctions) {
+			newMessage = function.apply(message);
+			if (newMessage != message) {
+				functionToRemove = function;
+				break;
+			}
+		}
+		if (functionToRemove != null) {
+			chatFunctions.remove(functionToRemove);
 			if (newMessage == null) {
 				e.setCanceled(true);
-				return;
-			} else if (newMessage != message) {
+			} else {
 				e.setMessage(newMessage);
-				return;
 			}
 		}
 	}
@@ -172,16 +181,49 @@ public class ChatBlocker {
 		});
 	}
 
-	public static void setBlock(BlockPos pos, IBlockState state) {
-		setBlock(pos, state, null);
+	public static void getTileEntityData(BlockPos pos, final Consumer<List<NBTTagCompound>> handler) {
+		addChatFunction(new Function<ITextComponent, ITextComponent>() {
+			@Override
+			public ITextComponent apply(ITextComponent message) {
+				if (!(message instanceof TextComponentTranslation)) {
+					return message;
+				}
+				TextComponentTranslation translation = (TextComponentTranslation) message;
+				String translationKey = translation.getKey();
+				if ("commands.generic.permission".equals(translationKey)) {
+					handler.accept(null);
+					TextComponentTranslation output = new TextComponentTranslation("redbuilder.noCommandPermission");
+					output.getStyle().setColor(TextFormatting.RED);
+					return output;
+				}
+				if ("commands.blockdata.outOfWorld".equals(translationKey)
+						|| "commands.blockdata.notValid".equals(translationKey)) {
+					handler.accept(null);
+					return null;
+				}
+				if ("commands.blockdata.failed".equals(translationKey)) {
+					String rawTileEntityData = (String) translation.getFormatArgs()[0];
+					List<NBTTagCompound> possibleTileEntityData = Lists.newArrayList();
+					for (NBTBase nbt : BrokenJsonToNBT.getPossibleTagsFromBrokenJson(rawTileEntityData)) {
+						if (nbt instanceof NBTTagCompound) {
+							possibleTileEntityData.add((NBTTagCompound) nbt);
+						}
+					}
+					handler.accept(possibleTileEntityData);
+					return null;
+				}
+				return message;
+			}
+		});
+		Minecraft.getMinecraft().thePlayer
+				.sendChatMessage(String.format("/blockdata %d %d %d {}", pos.getX(), pos.getY(), pos.getZ()));
 	}
 
-	public static void setBlock(BlockPos pos, IBlockState state, NBTTagCompound tileEntityData) {
+	public static void setBlock(BlockPos pos, IBlockState state) {
 		blockCommandFeedback("commands.setblock.success", "commands.setblock.outOfWorld", "commands.setblock.noChange");
 		Block block = state.getBlock();
-		Minecraft.getMinecraft().thePlayer.sendChatMessage(String.format("/setblock %d %d %d %s %d %s", pos.getX(),
-				pos.getY(), pos.getZ(), ForgeRegistries.BLOCKS.getKey(block), block.getMetaFromState(state),
-				tileEntityData == null ? "" : NBTToJson.getJsonFromTag(tileEntityData)));
+		Minecraft.getMinecraft().thePlayer.sendChatMessage(String.format("/setblock %d %d %d %s %d", pos.getX(),
+				pos.getY(), pos.getZ(), ForgeRegistries.BLOCKS.getKey(block), block.getMetaFromState(state)));
 	}
 
 }
