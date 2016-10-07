@@ -44,8 +44,9 @@ public class RedBuilder {
 	public boolean acceptsRemote(Map<String, String> remoteMods, Side remoteSide) {
 		forgeServer = false;
 		for (String remoteMod : remoteMods.keySet()) {
-			if (remoteMod.equals("forge")) {
+			if (remoteMod.equals("Forge")) {
 				forgeServer = true;
+				break;
 			}
 		}
 		return true;
