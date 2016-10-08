@@ -10,7 +10,11 @@ import net.minecraft.item.ItemStack;
 
 public class ItemWrenchCreativeTabHack extends Item {
 
-	public static final ItemWrenchCreativeTabHack INSTANCE = new ItemWrenchCreativeTabHack();
+	private static final ItemWrenchCreativeTabHack INSTANCE = new ItemWrenchCreativeTabHack();
+
+	public static ItemWrenchCreativeTabHack instance() {
+		return INSTANCE;
+	}
 
 	private ItemWrenchCreativeTabHack() {
 		setRegistryName(RedBuilder.MODID, "wrench_creative_tab_hack");

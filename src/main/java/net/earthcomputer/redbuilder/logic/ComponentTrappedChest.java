@@ -10,8 +10,8 @@ import net.minecraft.world.World;
 public class ComponentTrappedChest implements IRedstoneComponent {
 
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
-		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+		PowerInfo powerInfo = new PowerInfo();
 		if (!state.canProvidePower()) {
 			return powerInfo;
 		}
@@ -20,8 +20,8 @@ public class ComponentTrappedChest implements IRedstoneComponent {
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if (tileEntity instanceof TileEntityChest) {
 			power = ((TileEntityChest) tileEntity).numPlayersUsing;
-			if (power > 15) {
-				power = 15;
+			if (power > PowerInfo.MAX_POWER) {
+				power = PowerInfo.MAX_POWER;
 			}
 		}
 

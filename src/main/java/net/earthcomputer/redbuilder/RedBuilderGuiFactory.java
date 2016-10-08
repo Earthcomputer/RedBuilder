@@ -57,7 +57,7 @@ public class RedBuilderGuiFactory implements IModGuiFactory {
 					IConfigElement configElement) {
 				super(owningScreen, owningEntryList, configElement);
 			}
-			
+
 			@Override
 			protected GuiScreen buildChildScreen() {
 				return buildChildScreen("features");
@@ -66,7 +66,7 @@ public class RedBuilderGuiFactory implements IModGuiFactory {
 		}
 
 		public static abstract class SimpleCategoryEntry extends CategoryEntry {
-			
+
 			public SimpleCategoryEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList,
 					IConfigElement configElement) {
 				super(owningScreen, owningEntryList, configElement);
@@ -74,10 +74,9 @@ public class RedBuilderGuiFactory implements IModGuiFactory {
 
 			protected GuiScreen buildChildScreen(String ctgyName) {
 				return new GuiConfig(owningScreen,
-						new ConfigElement(RedBuilder.getInstance().getConfig().getCategory(ctgyName))
-								.getChildElements(),
+						new ConfigElement(RedBuilder.instance().getConfig().getCategory(ctgyName)).getChildElements(),
 						owningScreen.modID, false, false,
-						GuiConfig.getAbridgedConfigPath(RedBuilder.getInstance().getConfig().toString()));
+						GuiConfig.getAbridgedConfigPath(RedBuilder.instance().getConfig().toString()));
 			}
 		}
 	}

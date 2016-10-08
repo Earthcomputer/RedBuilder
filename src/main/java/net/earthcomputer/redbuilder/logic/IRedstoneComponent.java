@@ -6,6 +6,6 @@ import net.minecraft.world.World;
 
 public interface IRedstoneComponent {
 
-	RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state);
+	PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state);
 	
 }

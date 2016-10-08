@@ -12,13 +12,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class RedstonePowerInfo {
+public class PowerInfo {
 
+	public static final int MAX_POWER = 15;
+	
 	private EnumMap<EnumFacing, Integer> strongOutputs = Maps.newEnumMap(EnumFacing.class);
 	private EnumMap<EnumFacing, Integer> weakOutputs = Maps.newEnumMap(EnumFacing.class);
 	private Set<PowerRequirement> powerRequirements = Sets.newHashSet();
 
-	public RedstonePowerInfo() {
+	public PowerInfo() {
 		for (EnumFacing facing : EnumFacing.values()) {
 			strongOutputs.put(facing, 0);
 			weakOutputs.put(facing, 0);
@@ -27,13 +29,13 @@ public class RedstonePowerInfo {
 
 	public void powerNeighborsStrongly() {
 		for (EnumFacing side : EnumFacing.values()) {
-			powerStrong(side, 15);
+			powerStrong(side, MAX_POWER);
 		}
 	}
 
 	public void powerNeighborsWeakly() {
 		for (EnumFacing side : EnumFacing.values()) {
-			powerWeak(side, 15);
+			powerWeak(side, MAX_POWER);
 		}
 	}
 
@@ -124,7 +126,7 @@ public class RedstonePowerInfo {
 					if (!isValidPowerSource(world, pos, offsetPos)) {
 						continue;
 					}
-					RedstonePowerInfo otherPowerInfo = RedstoneComponentRegistry.getPowerInfo(world, offsetPos);
+					PowerInfo otherPowerInfo = RedstoneComponentRegistry.getPowerInfo(world, offsetPos);
 					int powerProviding = otherPowerInfo.getStrongOutputs().get(side.getOpposite());
 					if (powerProviding == 0) {
 						continue;
@@ -138,7 +140,7 @@ public class RedstonePowerInfo {
 				if (!isValidPowerSource(world, pos, origin)) {
 					continue;
 				}
-				RedstonePowerInfo otherPowerInfo = RedstoneComponentRegistry.getPowerInfo(world, origin);
+				PowerInfo otherPowerInfo = RedstoneComponentRegistry.getPowerInfo(world, origin);
 				int powerProviding;
 				if (requirement.requiresStrong()) {
 					powerProviding = otherPowerInfo.getStrongOutputs().get(requirement.getDirection());

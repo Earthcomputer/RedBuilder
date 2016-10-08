@@ -27,17 +27,21 @@ public class RedBuilder {
 	public static final Logger LOGGER = LogManager.getLogger(NAME);
 
 	@Instance(RedBuilder.MODID)
-	private static RedBuilder instance;
+	private static RedBuilder INSTANCE;
 
 	private Configuration config;
-	public boolean forgeServer;
+	private boolean forgeServer;
 
-	public static RedBuilder getInstance() {
-		return instance;
+	public static RedBuilder instance() {
+		return INSTANCE;
 	}
 
 	public Configuration getConfig() {
 		return config;
+	}
+	
+	public boolean isForgeServer() {
+		return forgeServer;
 	}
 
 	@NetworkCheckHandler
@@ -60,7 +64,7 @@ public class RedBuilder {
 		MinecraftForge.EVENT_BUS.register(new WrenchEventListener());
 		WrenchEventListener.registerHackItems();
 
-		MinecraftForge.EVENT_BUS.register(ChatBlocker.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(ClientChatUtils.instance());
 		MinecraftForge.EVENT_BUS.register(RedBuilderSettings.INSTANCE);
 
 		config = new Configuration(e.getSuggestedConfigurationFile());

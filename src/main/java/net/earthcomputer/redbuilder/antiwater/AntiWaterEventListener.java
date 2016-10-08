@@ -7,7 +7,7 @@ import java.util.Set;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 
-import net.earthcomputer.redbuilder.ChatBlocker;
+import net.earthcomputer.redbuilder.ClientChatUtils;
 import net.earthcomputer.redbuilder.RedBuilderSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -19,12 +19,10 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IWorldEventListener;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class AntiWaterEventListener {
 
@@ -58,7 +56,7 @@ public class AntiWaterEventListener {
 			return;
 		}
 
-		ChatBlocker.addChatFunction(new Function<ITextComponent, ITextComponent>() {
+		ClientChatUtils.addChatFunction(new Function<ITextComponent, ITextComponent>() {
 			@Override
 			public ITextComponent apply(ITextComponent input) {
 				if (!(input instanceof TextComponentTranslation)) {
@@ -76,14 +74,13 @@ public class AntiWaterEventListener {
 					long currentTime = Minecraft.getMinecraft().theWorld.getTotalWorldTime();
 					if (currentTime > lastWarningTime + 200) {
 						lastWarningTime = currentTime;
-						TextComponentTranslation newMessage;
+						String newMessage;
 						if ("commands.generic.permission".equals(translationKey)) {
-							newMessage = new TextComponentTranslation("redbuilder.noCommandPermission.antiwater");
+							newMessage = "redbuilder.noCommandPermission.antiwater";
 						} else {
-							newMessage = new TextComponentTranslation("redbuilder.antiwater.warning");
+							newMessage = "redbuilder.antiwater.warning";
 						}
-						newMessage.getStyle().setColor(TextFormatting.RED);
-						return newMessage;
+						return ClientChatUtils.buildErrorMessage(newMessage);
 					} else {
 						return null;
 					}
@@ -91,9 +88,7 @@ public class AntiWaterEventListener {
 				return input;
 			}
 		});
-		Minecraft.getMinecraft().thePlayer.sendChatMessage(String.format("/setblock %d %d %d %s %d", pos.getX(),
-				pos.getY(), pos.getZ(), ForgeRegistries.BLOCKS.getKey(oldBlock.getBlock()),
-				oldBlock.getBlock().getMetaFromState(oldBlock)));
+		ClientChatUtils.setBlock(pos, oldBlock);
 	}
 
 	private static class WorldEvtListener implements IWorldEventListener {

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import net.earthcomputer.redbuilder.ChatBlocker;
+import net.earthcomputer.redbuilder.ClientChatUtils;
 import net.earthcomputer.redbuilder.RedBuilderSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -30,7 +30,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class BetterMiddleClickListener {
@@ -85,8 +84,7 @@ public class BetterMiddleClickListener {
 			return;
 		}
 
-		pickBlock.setTagInfo("PickedBlock",
-				new NBTTagString(ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString()));
+		pickBlock.setTagInfo("PickedBlock", new NBTTagString(state.getBlock().delegate.name().toString()));
 		pickBlock.setTagInfo("StateData", new NBTTagByte((byte) state.getBlock().getMetaFromState(state)));
 
 		NBTTagCompound display = new NBTTagCompound();
@@ -149,7 +147,7 @@ public class BetterMiddleClickListener {
 			if (newValue == 0) {
 				IBlockState newState = pendingBlockPlacements.remove(pos);
 				if (world.getBlockState(pos).getBlock() == newState.getBlock()) {
-					ChatBlocker.setBlock(pos, newState);
+					ClientChatUtils.setBlock(pos, newState);
 				}
 			} else {
 				newMap.put(pos, newValue);

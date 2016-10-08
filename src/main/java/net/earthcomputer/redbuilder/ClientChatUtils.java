@@ -23,13 +23,16 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-public class ChatBlocker {
+public class ClientChatUtils {
 
-	public static final ChatBlocker INSTANCE = new ChatBlocker();
+	private static final ClientChatUtils INSTANCE = new ClientChatUtils();
 
-	private ChatBlocker() {
+	private ClientChatUtils() {
+	}
+
+	public static ClientChatUtils instance() {
+		return INSTANCE;
 	}
 
 	private static final Set<Function<ITextComponent, ITextComponent>> chatFunctions = Sets.newHashSet();
@@ -192,9 +195,7 @@ public class ChatBlocker {
 				String translationKey = translation.getKey();
 				if ("commands.generic.permission".equals(translationKey)) {
 					handler.accept(null);
-					TextComponentTranslation output = new TextComponentTranslation("redbuilder.noCommandPermission");
-					output.getStyle().setColor(TextFormatting.RED);
-					return output;
+					return buildErrorMessage("redbuilder.noCommandPermission");
 				}
 				if ("commands.blockdata.outOfWorld".equals(translationKey)
 						|| "commands.blockdata.notValid".equals(translationKey)) {
@@ -215,15 +216,32 @@ public class ChatBlocker {
 				return message;
 			}
 		});
-		Minecraft.getMinecraft().thePlayer
-				.sendChatMessage(String.format("/blockdata %d %d %d {}", pos.getX(), pos.getY(), pos.getZ()));
+		sendCommand("/blockdata %d %d %d {}", pos.getX(), pos.getY(), pos.getZ());
 	}
 
 	public static void setBlock(BlockPos pos, IBlockState state) {
 		blockCommandFeedback("commands.setblock.success", "commands.setblock.outOfWorld", "commands.setblock.noChange");
 		Block block = state.getBlock();
-		Minecraft.getMinecraft().thePlayer.sendChatMessage(String.format("/setblock %d %d %d %s %d", pos.getX(),
-				pos.getY(), pos.getZ(), ForgeRegistries.BLOCKS.getKey(block), block.getMetaFromState(state)));
+		sendCommand("/setblock %d %d %d %s %d", pos.getX(), pos.getY(), pos.getZ(), block.delegate.name(),
+				block.getMetaFromState(state));
+	}
+
+	public static void sendCommand(String command, Object... formatArgs) {
+		Minecraft.getMinecraft().thePlayer.sendChatMessage(String.format(command, formatArgs));
+	}
+
+	public static TextComponentTranslation buildErrorMessage(String translationKey, Object... formatArgs) {
+		TextComponentTranslation message = new TextComponentTranslation(translationKey, formatArgs);
+		message.getStyle().setColor(TextFormatting.RED);
+		return message;
+	}
+
+	public static void displayErrorMessage(String translationKey, Object... formatArgs) {
+		displayClientMessage(buildErrorMessage(translationKey, formatArgs));
+	}
+
+	public static void displayClientMessage(ITextComponent message) {
+		Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(message);
 	}
 
 }
