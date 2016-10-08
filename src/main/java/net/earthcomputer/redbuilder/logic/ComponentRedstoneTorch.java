@@ -10,22 +10,26 @@ import net.minecraft.world.World;
 public class ComponentRedstoneTorch implements IRedstoneComponent {
 
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
-		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+		PowerInfo powerInfo = new PowerInfo();
 		EnumFacing backwardsFacing = state.getValue(BlockRedstoneTorch.FACING).getOpposite();
 
 		powerInfo.canBePoweredBy(backwardsFacing);
 
-		if (state.getBlock() != Blocks.UNLIT_REDSTONE_TORCH) {
+		if (isLit(state)) {
 			for (EnumFacing side : EnumFacing.values()) {
 				if (side != backwardsFacing) {
-					powerInfo.powerWeak(side, 15);
+					powerInfo.powerWeak(side, PowerInfo.MAX_POWER);
 				}
 			}
-			powerInfo.powerStrong(EnumFacing.UP, 15);
+			powerInfo.powerStrong(EnumFacing.UP, PowerInfo.MAX_POWER);
 		}
 
 		return powerInfo;
+	}
+
+	private boolean isLit(IBlockState state) {
+		return state.getBlock() == Blocks.REDSTONE_TORCH;
 	}
 
 }

@@ -30,10 +30,10 @@ public class RedstoneLogicDisplayListener {
 			return;
 		}
 		BlockPos pos = target.getBlockPos();
-		RedstonePowerInfo powerInfo = RedstoneComponentRegistry.getPowerInfo(world, pos);
+		PowerInfo powerInfo = RedstoneComponentRegistry.getPowerInfo(world, pos);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0.5 - player.posX, -player.posY, 0.5 - player.posZ);
+		GlStateManager.translate(-player.posX, -player.posY, -player.posZ);
 
 		GlStateManager.disableBlend();
 		GlStateManager.disableDepth();

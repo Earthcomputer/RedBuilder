@@ -1,9 +1,8 @@
 package net.earthcomputer.redbuilder.wrench;
 
-import net.earthcomputer.redbuilder.ChatBlocker;
+import net.earthcomputer.redbuilder.ClientChatUtils;
 import net.earthcomputer.redbuilder.RedBuilder;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +12,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -30,12 +28,12 @@ import net.minecraftforge.fml.relauncher.Side;
 public class WrenchEventListener {
 
 	public static void registerHackItems() {
-		GameRegistry.register(ItemClickBlockHack.INSTANCE);
-		GameRegistry.register(ItemWrenchCreativeTabHack.INSTANCE);
+		GameRegistry.register(ItemClickBlockHack.instance());
+		GameRegistry.register(ItemWrenchCreativeTabHack.instance());
 
 		ModelResourceLocation hackLocation = new ModelResourceLocation(RedBuilder.MODID + ":hack_item", "inventory");
-		ModelLoader.setCustomModelResourceLocation(ItemClickBlockHack.INSTANCE, 0, hackLocation);
-		ModelLoader.setCustomModelResourceLocation(ItemWrenchCreativeTabHack.INSTANCE, 0, hackLocation);
+		ModelLoader.setCustomModelResourceLocation(ItemClickBlockHack.instance(), 0, hackLocation);
+		ModelLoader.setCustomModelResourceLocation(ItemWrenchCreativeTabHack.instance(), 0, hackLocation);
 	}
 
 	@SubscribeEvent
@@ -101,13 +99,11 @@ public class WrenchEventListener {
 		}
 
 		if (world.getTileEntity(pos) != null) {
-			TextComponentTranslation message = new TextComponentTranslation("redbuilder.wrench.tileentity");
-			message.getStyle().setColor(TextFormatting.RED);
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(message);
+			ClientChatUtils.displayErrorMessage("redbuilder.wrench.tileentity");
 			return false;
 		}
 
-		ChatBlocker.setBlock(pos, turnedState);
+		ClientChatUtils.setBlock(pos, turnedState);
 
 		return true;
 	}

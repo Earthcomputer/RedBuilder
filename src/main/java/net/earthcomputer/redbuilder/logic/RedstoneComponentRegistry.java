@@ -18,11 +18,11 @@ public class RedstoneComponentRegistry {
 
 	private static final Map<Block, IRedstoneComponent> components = Maps.newHashMap();
 
-	public static RedstonePowerInfo getPowerInfo(World world, BlockPos pos) {
+	public static PowerInfo getPowerInfo(World world, BlockPos pos) {
 		IBlockState state = world.getBlockState(pos);
 		IRedstoneComponent component = components.get(state.getBlock());
 		if (component == null) {
-			return new RedstonePowerInfo();
+			return new PowerInfo();
 		} else {
 			return component.getPowerInfo(world, pos, state);
 		}

@@ -15,7 +15,11 @@ import net.minecraft.world.World;
  */
 public class ItemClickBlockHack extends Item {
 
-	public static final ItemClickBlockHack INSTANCE = new ItemClickBlockHack();
+	private static final ItemClickBlockHack INSTANCE = new ItemClickBlockHack();
+	
+	public static ItemClickBlockHack instance() {
+		return INSTANCE;
+	}
 
 	private Item wrenchItem;
 

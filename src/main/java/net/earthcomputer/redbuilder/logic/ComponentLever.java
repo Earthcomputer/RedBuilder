@@ -8,11 +8,12 @@ import net.minecraft.world.World;
 public class ComponentLever implements IRedstoneComponent {
 
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
-		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+		PowerInfo powerInfo = new PowerInfo();
 		if (state.getValue(BlockLever.POWERED)) {
 			powerInfo.powerNeighborsWeakly();
-			powerInfo.powerStrong(state.getValue(BlockLever.FACING).getFacing().getOpposite(), 15);
+			powerInfo.powerStrong(state.getValue(BlockLever.FACING).getFacing().getOpposite(),
+					PowerInfo.MAX_POWER);
 		}
 		return powerInfo;
 	}

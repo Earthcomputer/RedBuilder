@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class ComponentRedstoneWire implements IRedstoneComponent {
 
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
 		RedstoneWirePowerInfo powerInfo = new RedstoneWirePowerInfo();
 
 		EnumMap<EnumConnectionPos, Integer> inputSides = getPowerInputs(world, pos, state, powerInfo);
@@ -46,8 +46,8 @@ public class ComponentRedstoneWire implements IRedstoneComponent {
 				for (EnumFacing secondarySide : EnumFacing.values()) {
 					BlockPos secondaryPos = offsetPos.offset(secondarySide);
 					IBlockState secondaryState = world.getBlockState(secondaryPos);
-					if (secondaryState.getBlock() != Blocks.REDSTONE_WIRE) {
-						RedstonePowerInfo secondaryPowerInfo = RedstoneComponentRegistry.getPowerInfo(world,
+					if (!isRedstoneWire(secondaryState)) {
+						PowerInfo secondaryPowerInfo = RedstoneComponentRegistry.getPowerInfo(world,
 								secondaryPos);
 						int power = secondaryPowerInfo.getStrongOutputs().get(secondarySide.getOpposite());
 						if (power > 0 && maxPower == 0) {
@@ -59,14 +59,14 @@ public class ComponentRedstoneWire implements IRedstoneComponent {
 					}
 				}
 				inputSides.put(EnumConnectionPos.fromFacing(side), maxPower);
-			} else if (offsetState.getBlock() == Blocks.REDSTONE_WIRE) {
+			} else if (isRedstoneWire(offsetState)) {
 				int power = offsetState.getValue(BlockRedstoneWire.POWER);
 				if (power > powerHere) {
 					powerInfo.addCustomInput(offsetPos, power);
 				}
 				inputSides.put(EnumConnectionPos.fromFacing(side), power);
 			} else {
-				RedstonePowerInfo offsetPowerInfo = RedstoneComponentRegistry.getPowerInfo(world, offsetPos);
+				PowerInfo offsetPowerInfo = RedstoneComponentRegistry.getPowerInfo(world, offsetPos);
 				int power = offsetPowerInfo.getWeakOutputs().get(side.getOpposite());
 				if (power > 0) {
 					powerInfo.canBePoweredBy(side);
@@ -84,7 +84,7 @@ public class ComponentRedstoneWire implements IRedstoneComponent {
 				if (!world.getBlockState(pos.up()).isNormalCube()) {
 					BlockPos diagonalWirePos = offsetPos.up();
 					IBlockState diagonalWire = world.getBlockState(diagonalWirePos);
-					if (diagonalWire.getBlock() == Blocks.REDSTONE_WIRE) {
+					if (isRedstoneWire(diagonalWire)) {
 						int power = diagonalWire.getValue(BlockRedstoneWire.POWER);
 						if (power > powerHere) {
 							inputSides.put(EnumConnectionPos.upFromFacing(side), power);
@@ -96,7 +96,7 @@ public class ComponentRedstoneWire implements IRedstoneComponent {
 				// Test for redstone diagonally below
 				BlockPos diagonalWirePos = offsetPos.down();
 				IBlockState diagonalWire = world.getBlockState(diagonalWirePos);
-				if (diagonalWire.getBlock() == Blocks.REDSTONE_WIRE) {
+				if (isRedstoneWire(diagonalWire)) {
 					int power = diagonalWire.getValue(BlockRedstoneWire.POWER);
 					if (power > powerHere) {
 						inputSides.put(EnumConnectionPos.downFromFacing(side), power);
@@ -156,7 +156,7 @@ public class ComponentRedstoneWire implements IRedstoneComponent {
 		IBlockState offsetState = world.getBlockState(offsetPos);
 
 		if (power > inputSides.get(EnumConnectionPos.fromFacing(side))) {
-			if (offsetState.getBlock() == Blocks.REDSTONE_WIRE) {
+			if (isRedstoneWire(offsetState)) {
 				powerInfo.addCustomOutput(offsetPos, power);
 			} else {
 				powerInfo.powerStrong(side, power);
@@ -166,7 +166,7 @@ public class ComponentRedstoneWire implements IRedstoneComponent {
 		// Test for redstone diagonally above
 		if (!world.getBlockState(pos.up()).isNormalCube()) {
 			BlockPos wirePos = offsetPos.up();
-			if (world.getBlockState(wirePos).getBlock() == Blocks.REDSTONE_WIRE) {
+			if (isRedstoneWire(world.getBlockState(wirePos))) {
 				if (power > inputSides.get(EnumConnectionPos.upFromFacing(side))) {
 					powerInfo.addCustomOutput(wirePos, power);
 				}
@@ -177,7 +177,7 @@ public class ComponentRedstoneWire implements IRedstoneComponent {
 		if (!offsetState.isNormalCube()) {
 			if (world.getBlockState(pos.down()).isNormalCube()) {
 				BlockPos wirePos = offsetPos.down();
-				if (world.getBlockState(wirePos).getBlock() == Blocks.REDSTONE_WIRE) {
+				if (isRedstoneWire(world.getBlockState(wirePos))) {
 					if (power > inputSides.get(EnumConnectionPos.downFromFacing(side))) {
 						powerInfo.addCustomOutput(wirePos, power);
 					}
@@ -186,7 +186,11 @@ public class ComponentRedstoneWire implements IRedstoneComponent {
 		}
 	}
 
-	private static class RedstoneWirePowerInfo extends RedstonePowerInfo {
+	private static boolean isRedstoneWire(IBlockState state) {
+		return state.getBlock() == Blocks.REDSTONE_WIRE;
+	}
+
+	private static class RedstoneWirePowerInfo extends PowerInfo {
 		private Map<BlockPos, Integer> customInputs = Maps.newHashMap();
 		private Map<BlockPos, Integer> customOutputs = Maps.newHashMap();
 
@@ -219,7 +223,7 @@ public class ComponentRedstoneWire implements IRedstoneComponent {
 
 		@Override
 		public boolean isValidPowerSource(World world, BlockPos thisPos, BlockPos otherPos) {
-			if (world.getBlockState(otherPos).getBlock() == Blocks.REDSTONE_WIRE) {
+			if (isRedstoneWire(world.getBlockState(otherPos))) {
 				return false;
 			} else {
 				return super.isValidPowerSource(world, thisPos, otherPos);
@@ -228,7 +232,7 @@ public class ComponentRedstoneWire implements IRedstoneComponent {
 
 		@Override
 		public boolean isValidPowerOutput(World world, BlockPos thisPos, BlockPos otherPos) {
-			if (world.getBlockState(otherPos).getBlock() == Blocks.REDSTONE_WIRE) {
+			if (isRedstoneWire(world.getBlockState(otherPos))) {
 				return false;
 			} else {
 				return super.isValidPowerOutput(world, thisPos, otherPos);

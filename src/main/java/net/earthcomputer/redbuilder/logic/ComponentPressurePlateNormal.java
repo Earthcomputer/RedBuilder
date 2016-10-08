@@ -9,11 +9,11 @@ import net.minecraft.world.World;
 public class ComponentPressurePlateNormal implements IRedstoneComponent {
 
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
-		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+		PowerInfo powerInfo = new PowerInfo();
 		if (state.getValue(BlockPressurePlate.POWERED)) {
 			powerInfo.powerNeighborsWeakly();
-			powerInfo.powerStrong(EnumFacing.DOWN, 15);
+			powerInfo.powerStrong(EnumFacing.DOWN, PowerInfo.MAX_POWER);
 		}
 		return powerInfo;
 	}

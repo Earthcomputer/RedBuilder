@@ -10,8 +10,8 @@ import net.minecraft.world.World;
 public class ComponentRepeater implements IRedstoneComponent {
 
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
-		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+		PowerInfo powerInfo = new PowerInfo();
 		EnumFacing repeaterFacing = state.getValue(BlockRedstoneRepeater.FACING).getOpposite();
 
 		powerInfo.canBePoweredBy(repeaterFacing.getOpposite());
@@ -19,7 +19,7 @@ public class ComponentRepeater implements IRedstoneComponent {
 		powerInfo.canBePoweredByStrongly(repeaterFacing.rotateYCCW());
 
 		if (state.getBlock() == Blocks.POWERED_REPEATER) {
-			powerInfo.powerStrong(repeaterFacing, 15);
+			powerInfo.powerStrong(repeaterFacing, PowerInfo.MAX_POWER);
 		}
 
 		return powerInfo;

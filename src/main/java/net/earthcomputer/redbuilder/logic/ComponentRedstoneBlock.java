@@ -7,8 +7,8 @@ import net.minecraft.world.World;
 public class ComponentRedstoneBlock implements IRedstoneComponent {
 
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
-		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+		PowerInfo powerInfo = new PowerInfo();
 		powerInfo.powerNeighborsWeakly();
 		return powerInfo;
 	}

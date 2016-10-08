@@ -59,7 +59,7 @@ public class RedBuilderSettings {
 	@SubscribeEvent
 	public void configChanged(ConfigChangedEvent.PostConfigChangedEvent e) {
 		if (e.getModID().equals(RedBuilder.MODID)) {
-			readFromConfig(RedBuilder.getInstance().getConfig());
+			readFromConfig(RedBuilder.instance().getConfig());
 		}
 	}
 

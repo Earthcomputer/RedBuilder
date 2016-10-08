@@ -18,9 +18,9 @@ import net.minecraft.world.World;
 public class ComponentComparator implements IRedstoneComponent {
 
 	private static final Random random = new Random(0);
-	
+
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
 		ComparatorPowerInfo powerInfo = new ComparatorPowerInfo();
 		EnumFacing comparatorFacing = state.getValue(BlockRedstoneComparator.FACING).getOpposite();
 
@@ -29,19 +29,8 @@ public class ComponentComparator implements IRedstoneComponent {
 			powerInfo.canBePoweredBy(comparatorFacing.getOpposite());
 		}
 
-		// Redstone blocks are an exception to the normal rule
-		EnumFacing sideFacing = comparatorFacing.rotateY();
-		if (world.getBlockState(pos.offset(sideFacing)).getBlock() == Blocks.REDSTONE_BLOCK) {
-			powerInfo.canBePoweredBy(sideFacing);
-		} else {
-			powerInfo.canBePoweredByStrongly(sideFacing);
-		}
-		sideFacing = comparatorFacing.rotateYCCW();
-		if (world.getBlockState(pos.offset(sideFacing)).getBlock() == Blocks.REDSTONE_BLOCK) {
-			powerInfo.canBePoweredBy(sideFacing);
-		} else {
-			powerInfo.canBePoweredByStrongly(sideFacing);
-		}
+		registerSidePower(world, pos, comparatorFacing.rotateY(), powerInfo);
+		registerSidePower(world, pos, comparatorFacing.rotateYCCW(), powerInfo);
 
 		int power = calcComparatorPower(world, pos, state, comparatorFacing, hasInputOverride);
 		if (power > 0) {
@@ -61,7 +50,7 @@ public class ComponentComparator implements IRedstoneComponent {
 		}
 
 		if (testingBlock.isNormalCube()) {
-			if (world.getRedstonePower(pos, comparatorFacing) >= 15) {
+			if (world.getRedstonePower(pos, comparatorFacing) >= PowerInfo.MAX_POWER) {
 				return false;
 			}
 
@@ -85,6 +74,14 @@ public class ComponentComparator implements IRedstoneComponent {
 			}
 		}
 		return false;
+	}
+
+	private void registerSidePower(World world, BlockPos pos, EnumFacing sideFacing, ComparatorPowerInfo powerInfo) {
+		if (isWeakInputAllowed(world, pos, sideFacing)) {
+			powerInfo.canBePoweredBy(sideFacing);
+		} else {
+			powerInfo.canBePoweredByStrongly(sideFacing);
+		}
 	}
 
 	private int calcComparatorPower(World world, BlockPos pos, IBlockState state, EnumFacing comparatorFacing,
@@ -111,15 +108,18 @@ public class ComponentComparator implements IRedstoneComponent {
 
 	private int getSidePower(World world, BlockPos pos, EnumFacing sideFacing) {
 		BlockPos offsetPos = pos.offset(sideFacing);
-		// Redstone blocks are an exception to the normal rule
-		if (world.getBlockState(offsetPos).getBlock() == Blocks.REDSTONE_BLOCK) {
-			return 15;
+		if (isWeakInputAllowed(world, pos, sideFacing)) {
+			return world.getRedstonePower(offsetPos, sideFacing);
 		} else {
 			return world.getStrongPower(offsetPos, sideFacing);
 		}
 	}
 
-	private static class ComparatorPowerInfo extends RedstonePowerInfo {
+	private boolean isWeakInputAllowed(World world, BlockPos pos, EnumFacing side) {
+		return world.getBlockState(pos.offset(side)).getBlock() == Blocks.REDSTONE_BLOCK;
+	}
+
+	private static class ComparatorPowerInfo extends PowerInfo {
 		private BlockPos inputOverrideOrigin;
 
 		public void setInputOverride(BlockPos source) {

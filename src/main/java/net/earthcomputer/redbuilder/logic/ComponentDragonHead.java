@@ -8,13 +8,15 @@ import net.minecraft.world.World;
 
 public class ComponentDragonHead implements IRedstoneComponent {
 
+	private static final int SKULL_TYPE_DRAGON = 5;
+
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
-		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+		PowerInfo powerInfo = new PowerInfo();
 
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if (tileEntity instanceof TileEntitySkull) {
-			if (((TileEntitySkull) tileEntity).getSkullType() == 5) {
+			if (((TileEntitySkull) tileEntity).getSkullType() == SKULL_TYPE_DRAGON) {
 				powerInfo.canBePowered();
 			}
 		}

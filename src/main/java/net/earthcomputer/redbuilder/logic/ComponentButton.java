@@ -8,11 +8,11 @@ import net.minecraft.world.World;
 public class ComponentButton implements IRedstoneComponent {
 
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
-		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+		PowerInfo powerInfo = new PowerInfo();
 		if (state.getValue(BlockButton.POWERED)) {
 			powerInfo.powerNeighborsWeakly();
-			powerInfo.powerStrong(state.getValue(BlockButton.FACING).getOpposite(), 15);
+			powerInfo.powerStrong(state.getValue(BlockButton.FACING).getOpposite(), PowerInfo.MAX_POWER);
 		}
 		return powerInfo;
 	}

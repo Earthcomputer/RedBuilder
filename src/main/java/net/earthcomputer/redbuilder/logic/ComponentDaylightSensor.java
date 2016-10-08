@@ -9,8 +9,8 @@ import net.minecraft.world.World;
 public class ComponentDaylightSensor implements IRedstoneComponent {
 
 	@Override
-	public RedstonePowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
-		RedstonePowerInfo powerInfo = new RedstonePowerInfo();
+	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
+		PowerInfo powerInfo = new PowerInfo();
 		int power = state.getValue(BlockDaylightDetector.POWER);
 		if (power > 0) {
 			for (EnumFacing side : EnumFacing.values()) {
