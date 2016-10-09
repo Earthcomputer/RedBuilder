@@ -5,6 +5,12 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockQuartz;
+import net.minecraft.block.BlockRotatedPillar;
+import net.minecraft.block.BlockSlab;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -38,6 +44,162 @@ public class WrenchTurnRegistry {
 			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
 				return state.withProperty(BlockDirectional.FACING,
 						rotateFacing(state.getValue(BlockDirectional.FACING), axis, dir));
+			}
+		});
+		addFunction(new IWrenchFunction() {
+			@Override
+			public boolean applies(IBlockState state) {
+				return state.getProperties().containsKey(BlockHorizontal.FACING);
+			}
+
+			@Override
+			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
+				if (axis != Axis.Y) {
+					return state;
+				} else {
+					return state.withProperty(BlockHorizontal.FACING,
+							rotateFacing(state.getValue(BlockHorizontal.FACING), axis, dir));
+				}
+			}
+		});
+		addFunction(new IWrenchFunction() {
+			@Override
+			public boolean applies(IBlockState state) {
+				return state.getProperties().containsKey(BlockLog.LOG_AXIS);
+			}
+
+			@Override
+			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
+				EnumFacing facing;
+				switch (state.getValue(BlockLog.LOG_AXIS)) {
+				case X:
+					facing = EnumFacing.EAST;
+					break;
+				case Y:
+					facing = EnumFacing.UP;
+					break;
+				case Z:
+					facing = EnumFacing.SOUTH;
+					break;
+				default:
+					throw new AssertionError();
+				}
+				facing = rotateFacing(facing, axis, dir);
+				return state.withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(facing.getAxis()));
+			}
+		});
+		addFunction(new IWrenchFunction() {
+			@Override
+			public boolean applies(IBlockState state) {
+				return state.getProperties().containsKey(BlockRotatedPillar.AXIS);
+			}
+
+			@Override
+			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
+				EnumFacing facing = EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE,
+						state.getValue(BlockRotatedPillar.AXIS));
+				facing = rotateFacing(facing, axis, dir);
+				return state.withProperty(BlockRotatedPillar.AXIS, facing.getAxis());
+			}
+		});
+		addFunction(new IWrenchFunction() {
+			@Override
+			public boolean applies(IBlockState state) {
+				return state.getProperties().containsKey(BlockQuartz.VARIANT);
+			}
+
+			@Override
+			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
+				BlockQuartz.EnumType variant = state.getValue(BlockQuartz.VARIANT);
+				switch (variant) {
+				case LINES_X:
+					switch (axis) {
+					case Y:
+						variant = BlockQuartz.EnumType.LINES_Z;
+						break;
+					case Z:
+						variant = BlockQuartz.EnumType.LINES_Y;
+						break;
+					default:
+						break;
+					}
+					break;
+				case LINES_Y:
+					switch (axis) {
+					case X:
+						variant = BlockQuartz.EnumType.LINES_Z;
+						break;
+					case Z:
+						variant = BlockQuartz.EnumType.LINES_X;
+						break;
+					default:
+						break;
+					}
+					break;
+				case LINES_Z:
+					switch (axis) {
+					case X:
+						variant = BlockQuartz.EnumType.LINES_Y;
+						break;
+					case Y:
+						variant = BlockQuartz.EnumType.LINES_X;
+						break;
+					default:
+						break;
+					}
+					break;
+				default:
+					break;
+				}
+				return state.withProperty(BlockQuartz.VARIANT, variant);
+			}
+		});
+		addFunction(new IWrenchFunction() {
+			@Override
+			public boolean applies(IBlockState state) {
+				return state.getProperties().containsKey(BlockSlab.HALF);
+			}
+
+			@Override
+			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
+				if (axis == Axis.Y) {
+					return state;
+				} else {
+					return state.withProperty(BlockSlab.HALF,
+							state.getValue(BlockSlab.HALF) == BlockSlab.EnumBlockHalf.BOTTOM
+									? BlockSlab.EnumBlockHalf.TOP : BlockSlab.EnumBlockHalf.BOTTOM);
+				}
+			}
+		});
+		addFunction(new IWrenchFunction() {
+			@Override
+			public boolean applies(IBlockState state) {
+				return BlockStairs.isBlockStairs(state);
+			}
+
+			@Override
+			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
+				EnumFacing stairsFacing = state.getValue(BlockStairs.FACING);
+				EnumFacing rotatedFacing = rotateFacing(stairsFacing, axis, dir);
+				if (axis == stairsFacing.getAxis()) {
+					boolean flip;
+					if (state.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.BOTTOM) {
+						flip = rotatedFacing == EnumFacing.DOWN;
+					} else {
+						flip = rotatedFacing == EnumFacing.UP;
+					}
+					if (flip) {
+						return state.withProperty(BlockStairs.HALF,
+								state.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.BOTTOM
+										? BlockStairs.EnumHalf.TOP : BlockStairs.EnumHalf.BOTTOM);
+					} else {
+						return state.withProperty(BlockStairs.FACING, stairsFacing.getOpposite());
+					}
+				} else if (rotatedFacing.getAxis() == Axis.Y) {
+					return state;
+				} else {
+					return state.withProperty(BlockStairs.FACING, rotatedFacing);
+				}
 			}
 		});
 	}
