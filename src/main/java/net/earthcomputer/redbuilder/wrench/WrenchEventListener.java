@@ -1,6 +1,5 @@
 package net.earthcomputer.redbuilder.wrench;
 
-import net.earthcomputer.redbuilder.ExtendedReflectionHelper;
 import net.earthcomputer.redbuilder.IDelayedReturnSite;
 import net.earthcomputer.redbuilder.IRedBuilderFeature;
 import net.earthcomputer.redbuilder.RedBuilder;
@@ -19,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -118,10 +116,9 @@ public class WrenchEventListener implements IRedBuilderFeature {
 				if (e.getSide() == Side.CLIENT) {
 					BlockPos pos = e.getPos();
 					Vec3d vec = ClientInstructionWrapper.getObjMouseOver().hitVec;
-					Packet<?> packet = ExtendedReflectionHelper.newInstance(CPacketPlayerTryUseItemOnBlock.class, pos,
+					ClientInstructionWrapper.sendVanillaPacketToServer(new CPacketPlayerTryUseItemOnBlock(pos,
 							e.getFace(), e.getHand(), (float) (vec.xCoord - pos.getX()),
-							(float) (vec.yCoord - pos.getY()), (float) (vec.zCoord - pos.getZ()));
-					ClientInstructionWrapper.sendVanillaPacketToServer(packet);
+							(float) (vec.yCoord - pos.getY()), (float) (vec.zCoord - pos.getZ())));
 				}
 				return;
 			}
