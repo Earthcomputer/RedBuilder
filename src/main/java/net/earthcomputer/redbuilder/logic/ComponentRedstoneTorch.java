@@ -1,6 +1,5 @@
 package net.earthcomputer.redbuilder.logic;
 
-import net.minecraft.block.BlockRedstoneTorch;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;

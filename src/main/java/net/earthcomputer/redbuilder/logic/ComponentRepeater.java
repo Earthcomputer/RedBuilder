@@ -1,7 +1,6 @@
 package net.earthcomputer.redbuilder.logic;
 
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.BlockRedstoneRepeater;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
