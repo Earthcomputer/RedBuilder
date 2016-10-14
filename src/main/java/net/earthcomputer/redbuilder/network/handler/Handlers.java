@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -22,6 +23,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerDisconnectionFromClientEvent;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -100,7 +102,16 @@ public class Handlers {
 		NetworkDispatcher dispatcher = NetworkDispatcher.get(e.getManager());
 		EntityPlayerMP player = ((NetHandlerPlayServer) e.getHandler()).playerEntity;
 
-		if (dispatcher.getModList().containsKey(RedBuilder.MODID)) {
+		Map<String, String> modList;
+		if ("MODDED".equals(
+				((Enum<?>) ReflectionHelper.getPrivateValue(NetworkDispatcher.class, dispatcher, "connectionType"))
+						.name())) {
+			modList = dispatcher.getModList();
+		} else {
+			modList = ImmutableMap.of();
+		}
+
+		if (modList.containsKey(RedBuilder.MODID)) {
 			serverSideHandlers.put(player, new ServerSideRedBuilderHandler(player));
 			RedBuilder.LOGGER.info("Connection from RedBuilder client, using server-side RedBuilder handler");
 			clientsNeedingUpdate.add(player);
