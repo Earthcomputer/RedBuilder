@@ -1,5 +1,6 @@
 package net.earthcomputer.redbuilder.logic;
 
+import net.earthcomputer.redbuilder.IRedBuilderFeature;
 import net.earthcomputer.redbuilder.RedBuilderSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -8,9 +9,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class RedstoneLogicDisplayListener {
+public class RedstoneLogicDisplayListener implements IRedBuilderFeature {
+
+	@Override
+	public void initialize() {
+		MinecraftForge.EVENT_BUS.register(this);
+	}
 
 	@SubscribeEvent
 	public void onRenderBlockOverlay(DrawBlockHighlightEvent e) {

@@ -12,7 +12,7 @@ redbuilder.configgui.features.antiWater.lava_only=Lava Only
 redbuilder.configgui.features.antiWater.both=Both
 
 redbuilder.getTileEntityData.noPossibilities=Tried to get tile entity data from the server, received response with invalid format. This is most likely a bug in RedBuilder
-redbuilder.getTileEntityData.tooManyPossibilities=Tried to get tile entity data from the server, received ambiguous response. Try using a different method or installing a Forge server
+redbuilder.getTileEntityData.tooManyPossibilities=Tried to get tile entity data from the server, received ambiguous response. Try using a different method or using a Forge server
 
 redbuilder.noCommandPermission=You need to have cheats enabled to use this function
 redbuilder.noCommandPermission.antiwater=You need to have cheats enabled to use AntiWater
@@ -20,4 +20,4 @@ redbuilder.noCommandPermission.antiwater=You need to have cheats enabled to use 
 redbuilder.wrench.y_axis=Wrench (Horizontal Mode)
 redbuilder.wrench.facing_axis=Wrench (Forward Mode)
 redbuilder.wrench.perpendicular_facing_axis=Wrench (LeftToRight Mode)
-redbuilder.wrench.tileentity=Cannot use wrench on tile entities
+redbuilder.wrench.tileentity=To use the wrench on tile entities, you need RedBuilder installed on the server

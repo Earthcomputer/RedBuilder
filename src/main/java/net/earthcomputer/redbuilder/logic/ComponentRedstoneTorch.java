@@ -1,6 +1,7 @@
 package net.earthcomputer.redbuilder.logic;
 
 import net.minecraft.block.BlockRedstoneTorch;
+import net.minecraft.block.BlockTorch;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -12,7 +13,7 @@ public class ComponentRedstoneTorch implements IRedstoneComponent {
 	@Override
 	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
 		PowerInfo powerInfo = new PowerInfo();
-		EnumFacing backwardsFacing = state.getValue(BlockRedstoneTorch.FACING).getOpposite();
+		EnumFacing backwardsFacing = state.getValue(BlockTorch.FACING).getOpposite();
 
 		powerInfo.canBePoweredBy(backwardsFacing);
 

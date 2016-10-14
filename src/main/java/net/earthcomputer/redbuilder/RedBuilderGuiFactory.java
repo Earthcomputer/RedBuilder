@@ -46,9 +46,25 @@ public class RedBuilderGuiFactory implements IModGuiFactory {
 
 		private static List<IConfigElement> getConfigElements() {
 			List<IConfigElement> elements = Lists.newArrayList();
+			elements.add(new DummyCategoryElement("general", "redbuilder.configgui.ctgy.general",
+					GeneralCategoryEntry.class));
 			elements.add(new DummyCategoryElement("features", "redbuilder.configgui.ctgy.features",
 					FeaturesCategoryEntry.class));
 			return elements;
+		}
+
+		public static class GeneralCategoryEntry extends SimpleCategoryEntry {
+
+			public GeneralCategoryEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList,
+					IConfigElement configElement) {
+				super(owningScreen, owningEntryList, configElement);
+			}
+
+			@Override
+			public GuiScreen buildChildScreen() {
+				return buildChildScreen("general");
+			}
+
 		}
 
 		public static class FeaturesCategoryEntry extends SimpleCategoryEntry {

@@ -1,5 +1,6 @@
 package net.earthcomputer.redbuilder.logic;
 
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockRedstoneRepeater;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -12,7 +13,7 @@ public class ComponentRepeater implements IRedstoneComponent {
 	@Override
 	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
 		PowerInfo powerInfo = new PowerInfo();
-		EnumFacing repeaterFacing = state.getValue(BlockRedstoneRepeater.FACING).getOpposite();
+		EnumFacing repeaterFacing = state.getValue(BlockHorizontal.FACING).getOpposite();
 
 		powerInfo.canBePoweredBy(repeaterFacing.getOpposite());
 		powerInfo.canBePoweredByStrongly(repeaterFacing.rotateY());

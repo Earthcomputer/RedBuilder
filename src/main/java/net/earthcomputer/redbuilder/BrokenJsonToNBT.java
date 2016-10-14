@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.collect.Lists;
 
+import net.earthcomputer.redbuilder.network.handler.Handlers;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagByte;
@@ -19,7 +20,10 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class BrokenJsonToNBT {
 
 	private static final Pattern NUMBER = Pattern.compile("[+-]?(?:[0-9]+[bBlLsS]?)|(?:[0-9]*\\.?[0-9]+[DdFf]?)");
@@ -358,7 +362,7 @@ public class BrokenJsonToNBT {
 
 			// Vanilla servers do not convert \ to \\ in quoted strings, Forge
 			// servers do. This is what most of this complex crap is about.
-			if (RedBuilder.instance().isForgeServer()) {
+			if (Handlers.isForgeServer()) {
 				// Parse the string the easy way. The \" dilemma was handled for
 				// us by the Forge server.
 				StringBuilder token = new StringBuilder("\"");

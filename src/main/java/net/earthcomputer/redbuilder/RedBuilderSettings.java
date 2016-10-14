@@ -17,6 +17,8 @@ public class RedBuilderSettings {
 
 	public static final RedBuilderSettings INSTANCE = new RedBuilderSettings();
 
+	public static boolean useCommandsForNonRedBuilderServers;
+
 	public static boolean enableAdvancedMiddleClick;
 	public static boolean enableRedstonePowerInfo;
 	public static EnumAntiWaterSetting antiWaterSetting;
@@ -25,6 +27,10 @@ public class RedBuilderSettings {
 	}
 
 	public static void readFromConfig(Configuration config) {
+		useCommandsForNonRedBuilderServers = getProp(config, "general", "useCommandsForNonRedBuilderServers", "true",
+				"Whether to use commands when the server does not have RedBuilder installed. Turn this off if you don't want to send lots of commands in a short space of time",
+				Property.Type.BOOLEAN).getBoolean();
+
 		enableAdvancedMiddleClick = getProp(config, "features", "advancedMiddleClick", "true",
 				"Whether any block can be Ctrl + pick-blocked (not just tile entities)", Property.Type.BOOLEAN)
 						.getBoolean();

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.google.common.base.Predicate;
 
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockRedstoneComparator;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItemFrame;
@@ -22,7 +23,7 @@ public class ComponentComparator implements IRedstoneComponent {
 	@Override
 	public PowerInfo getPowerInfo(World world, BlockPos pos, IBlockState state) {
 		ComparatorPowerInfo powerInfo = new ComparatorPowerInfo();
-		EnumFacing comparatorFacing = state.getValue(BlockRedstoneComparator.FACING).getOpposite();
+		EnumFacing comparatorFacing = state.getValue(BlockHorizontal.FACING).getOpposite();
 
 		boolean hasInputOverride = getInputOverride(world, pos, comparatorFacing, powerInfo);
 		if (!hasInputOverride) {

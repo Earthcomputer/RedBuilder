@@ -1,4 +1,4 @@
-package net.earthcomputer.redbuilder;
+package net.earthcomputer.redbuilder.network;
 
 import java.util.List;
 import java.util.Set;
@@ -9,6 +9,8 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import net.earthcomputer.redbuilder.BrokenJsonToNBT;
+import net.earthcomputer.redbuilder.IDelayedReturnSite;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -19,11 +21,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class ClientChatUtils {
 
 	private static final ClientChatUtils INSTANCE = new ClientChatUtils();
@@ -184,7 +188,7 @@ public class ClientChatUtils {
 		});
 	}
 
-	public static void getTileEntityData(BlockPos pos, final Consumer<List<NBTTagCompound>> handler) {
+	public static void getTileEntityData(BlockPos pos, final IDelayedReturnSite<List<NBTTagCompound>> handler) {
 		addChatFunction(new Function<ITextComponent, ITextComponent>() {
 			@Override
 			public ITextComponent apply(ITextComponent message) {
@@ -194,12 +198,10 @@ public class ClientChatUtils {
 				TextComponentTranslation translation = (TextComponentTranslation) message;
 				String translationKey = translation.getKey();
 				if ("commands.generic.permission".equals(translationKey)) {
-					handler.accept(null);
-					return buildErrorMessage("redbuilder.noCommandPermission");
+					return CommonChatUtils.buildErrorMessage("redbuilder.noCommandPermission");
 				}
 				if ("commands.blockdata.outOfWorld".equals(translationKey)
 						|| "commands.blockdata.notValid".equals(translationKey)) {
-					handler.accept(null);
 					return null;
 				}
 				if ("commands.blockdata.failed".equals(translationKey)) {
@@ -210,7 +212,7 @@ public class ClientChatUtils {
 							possibleTileEntityData.add((NBTTagCompound) nbt);
 						}
 					}
-					handler.accept(possibleTileEntityData);
+					handler.returnValue(possibleTileEntityData);
 					return null;
 				}
 				return message;
@@ -228,20 +230,6 @@ public class ClientChatUtils {
 
 	public static void sendCommand(String command, Object... formatArgs) {
 		Minecraft.getMinecraft().thePlayer.sendChatMessage(String.format(command, formatArgs));
-	}
-
-	public static TextComponentTranslation buildErrorMessage(String translationKey, Object... formatArgs) {
-		TextComponentTranslation message = new TextComponentTranslation(translationKey, formatArgs);
-		message.getStyle().setColor(TextFormatting.RED);
-		return message;
-	}
-
-	public static void displayErrorMessage(String translationKey, Object... formatArgs) {
-		displayClientMessage(buildErrorMessage(translationKey, formatArgs));
-	}
-
-	public static void displayClientMessage(ITextComponent message) {
-		Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(message);
 	}
 
 }
