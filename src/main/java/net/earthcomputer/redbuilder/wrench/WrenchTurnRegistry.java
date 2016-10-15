@@ -5,12 +5,14 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockQuartz;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
+import net.minecraft.block.BlockTorch;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -207,6 +209,40 @@ public class WrenchTurnRegistry {
 				} else {
 					return state.withProperty(BlockStairs.FACING, rotatedFacing);
 				}
+			}
+		});
+		// Hoppers
+		addFunction(new IWrenchFunction() {
+			@Override
+			public boolean applies(IBlockState state) {
+				return state.getProperties().containsKey(BlockHopper.FACING);
+			}
+
+			@Override
+			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
+				EnumFacing facing = state.getValue(BlockHopper.FACING);
+				facing = rotateFacing(facing, axis, dir);
+				if (facing == EnumFacing.UP) {
+					facing = rotateFacing(facing, axis, dir);
+				}
+				return state.withProperty(BlockHopper.FACING, facing);
+			}
+		});
+		// Torches
+		addFunction(new IWrenchFunction() {
+			@Override
+			public boolean applies(IBlockState state) {
+				return state.getProperties().containsKey(BlockTorch.FACING);
+			}
+
+			@Override
+			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
+				EnumFacing facing = state.getValue(BlockTorch.FACING);
+				facing = rotateFacing(facing, axis, dir);
+				if (facing == EnumFacing.DOWN) {
+					facing = rotateFacing(facing, axis, dir);
+				}
+				return state.withProperty(BlockTorch.FACING, facing);
 			}
 		});
 	}
