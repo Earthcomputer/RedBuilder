@@ -34,6 +34,7 @@ public class WrenchTurnRegistry {
 	}
 
 	static {
+		// Blocks that can face in all 6 directions
 		addFunction(new IWrenchFunction() {
 			@Override
 			public boolean applies(IBlockState state) {
@@ -46,6 +47,7 @@ public class WrenchTurnRegistry {
 						rotateFacing(state.getValue(BlockDirectional.FACING), axis, dir));
 			}
 		});
+		// Blocks that can face in all the horizontal directions
 		addFunction(new IWrenchFunction() {
 			@Override
 			public boolean applies(IBlockState state) {
@@ -62,6 +64,7 @@ public class WrenchTurnRegistry {
 				}
 			}
 		});
+		// Logs
 		addFunction(new IWrenchFunction() {
 			@Override
 			public boolean applies(IBlockState state) {
@@ -88,6 +91,7 @@ public class WrenchTurnRegistry {
 				return state.withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(facing.getAxis()));
 			}
 		});
+		// Pillars (purpur pillar, bone block)
 		addFunction(new IWrenchFunction() {
 			@Override
 			public boolean applies(IBlockState state) {
@@ -102,6 +106,7 @@ public class WrenchTurnRegistry {
 				return state.withProperty(BlockRotatedPillar.AXIS, facing.getAxis());
 			}
 		});
+		// Quartz pillars (share the same block with other types of quartz)
 		addFunction(new IWrenchFunction() {
 			@Override
 			public boolean applies(IBlockState state) {
@@ -154,6 +159,7 @@ public class WrenchTurnRegistry {
 				return state.withProperty(BlockQuartz.VARIANT, variant);
 			}
 		});
+		// Slabs
 		addFunction(new IWrenchFunction() {
 			@Override
 			public boolean applies(IBlockState state) {
@@ -171,6 +177,7 @@ public class WrenchTurnRegistry {
 				}
 			}
 		});
+		// Stairs
 		addFunction(new IWrenchFunction() {
 			@Override
 			public boolean applies(IBlockState state) {
@@ -181,12 +188,12 @@ public class WrenchTurnRegistry {
 			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
 				EnumFacing stairsFacing = state.getValue(BlockStairs.FACING);
 				EnumFacing rotatedFacing = rotateFacing(stairsFacing, axis, dir);
-				if (axis == stairsFacing.getAxis()) {
+				if (axis == stairsFacing.rotateY().getAxis()) {
 					boolean flip;
 					if (state.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.BOTTOM) {
-						flip = rotatedFacing == EnumFacing.DOWN;
-					} else {
 						flip = rotatedFacing == EnumFacing.UP;
+					} else {
+						flip = rotatedFacing == EnumFacing.DOWN;
 					}
 					if (flip) {
 						return state.withProperty(BlockStairs.HALF,
