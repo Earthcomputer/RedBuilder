@@ -1,11 +1,20 @@
+itemGroup.redbuilder=Red Builder
+
 redbuilder.antiwater.warning=AntiWater has been used! This contraption will not work in survival!
 
 redbuilder.configgui.title=Red Builder Configuration
+redbuilder.configgui.ctgy.general=General
+redbuilder.configgui.ctgy.general.tooltip=General Red Builder settings
+redbuilder.configgui.general.useCommandsForNonRedBuilderServers=Use commands for vanilla servers
+redbuilder.configgui.general.useCommandsForNonRedBuilderServers.tooltip=Whether to use commands when the server does not have RedBuilder installed. Turn this off if you don't want to send lots of commands in a short space of time
 redbuilder.configgui.ctgy.features=Features
 redbuilder.configgui.ctgy.features.tooltip=Enable/Disable Red Builder features
 redbuilder.configgui.features.advancedMiddleClick=Enable Advaned Middle Click
+redbuilder.configgui.features.advancedMiddleClick.tooltip=Whether any block can be Ctrl + pick-blocked (not just tile entities)
 redbuilder.configgui.features.redstonePowerInfo=Enable Redstone Power Info
+redbuilder.configgui.features.redstonePowerInfo.tooltip=Whether to display the inputs and outputs of a redstone component when they are hovered over
 redbuilder.configgui.features.antiWater=AntiWater Setting
+redbuilder.configgui.features.antiWater.tooltip=Which liquid to protected your redstone contraptions from (affected by lag in vanilla servers so water doesn't work so well)
 redbuilder.configgui.features.antiWater.none=Neither
 redbuilder.configgui.features.antiWater.water_only=Water Only
 redbuilder.configgui.features.antiWater.lava_only=Lava Only

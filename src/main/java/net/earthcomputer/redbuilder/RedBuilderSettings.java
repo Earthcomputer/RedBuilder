@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -27,34 +28,31 @@ public class RedBuilderSettings {
 	}
 
 	public static void readFromConfig(Configuration config) {
-		useCommandsForNonRedBuilderServers = getProp(config, "general", "useCommandsForNonRedBuilderServers", "true",
-				"Whether to use commands when the server does not have RedBuilder installed. Turn this off if you don't want to send lots of commands in a short space of time",
+		useCommandsForNonRedBuilderServers = getProp(config, "general", "useCommandsForNonRedBuilderServers", "false",
 				Property.Type.BOOLEAN).getBoolean();
 
-		enableAdvancedMiddleClick = getProp(config, "features", "advancedMiddleClick", "true",
-				"Whether any block can be Ctrl + pick-blocked (not just tile entities)", Property.Type.BOOLEAN)
-						.getBoolean();
-		enableRedstonePowerInfo = getProp(config, "features", "redstonePowerInfo", "false",
-				"Whether to display the inputs and outputs of a redstone component when they are hovered over",
-				Property.Type.BOOLEAN).getBoolean();
-		antiWaterSetting = EnumAntiWaterSetting
-				.getByName(getProp(config, "features", "antiWater", EnumAntiWaterSetting.LAVA_ONLY.getName(),
-						"Which liquid to protected your redstone contraptions from (affected by lag so water doesn't work so well)",
-						Property.Type.STRING, EnumAntiWaterSetting.getNames()).getString());
+		enableAdvancedMiddleClick = getProp(config, "features", "advancedMiddleClick", "true", Property.Type.BOOLEAN)
+				.getBoolean();
+		enableRedstonePowerInfo = getProp(config, "features", "redstonePowerInfo", "false", Property.Type.BOOLEAN)
+				.getBoolean();
+		Property prop = getProp(config, "features", "antiWater", EnumAntiWaterSetting.LAVA_ONLY.getName(),
+				Property.Type.STRING, EnumAntiWaterSetting.getNames());
+		prop.setConfigEntryClass(TranslatedCycleValueEntry.class);
+		antiWaterSetting = EnumAntiWaterSetting.getByName(prop.getString());
 
 		if (config.hasChanged()) {
 			config.save();
 		}
 	}
 
-	private static Property getProp(Configuration config, String ctgy, String key, String dflt, String desc,
-			Property.Type type) {
-		return getProp(config, ctgy, key, dflt, desc, type, (String[]) null);
+	private static Property getProp(Configuration config, String ctgy, String key, String dflt, Property.Type type) {
+		return getProp(config, ctgy, key, dflt, type, (String[]) null);
 	}
 
-	private static Property getProp(Configuration config, String ctgy, String key, String dflt, String desc,
-			Property.Type type, String... validValues) {
-		Property prop = config.get(ctgy, key, dflt, desc, type);
+	private static Property getProp(Configuration config, String ctgy, String key, String dflt, Property.Type type,
+			String... validValues) {
+		Property prop = config.get(ctgy, key, dflt,
+				I18n.format("redbuilder.configgui." + ctgy + "." + key + ".tooltip"), type);
 		prop.setLanguageKey("redbuilder.configgui." + ctgy + "." + key);
 		if (validValues != null) {
 			prop.setValidValues(validValues);
