@@ -33,6 +33,8 @@ public class RedBuilderGuiFactory implements IModGuiFactory {
 		return null;
 	}
 
+	// Deprecated while RuntimeOptionGuiHandler remains required here
+	@Deprecated
 	@Override
 	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
 		return null;
