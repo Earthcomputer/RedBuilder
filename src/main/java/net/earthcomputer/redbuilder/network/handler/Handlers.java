@@ -29,19 +29,27 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Handlers {
 
-	public static final Handlers INSTANCE = new Handlers();
+	private static final Handlers INSTANCE = new Handlers();
 
 	private Handlers() {
 	}
 
+	public static Handlers instance() {
+		return INSTANCE;
+	}
+
+	// Common fields
 	private static Side bestExecutionSide = Side.SERVER;
+	// Client fields
 	private static IUniformInstructionHandler clientSideHandler;
+	@SideOnly(Side.CLIENT)
+	private static boolean forgeServer;
+	// Server fields
 	private static final Map<EntityPlayerMP, IUniformInstructionHandler> serverSideHandlers = Maps.newHashMap();
 	private static final List<EntityPlayerMP> clientsNeedingUpdate = Collections
 			.synchronizedList(Lists.<EntityPlayerMP> newArrayList());
-	@SideOnly(Side.CLIENT)
-	private static boolean forgeServer;
 
+	// PUBLIC METHODS
 	public static boolean isBestExecutionSide(Side side) {
 		return side == bestExecutionSide;
 	}
@@ -67,6 +75,8 @@ public class Handlers {
 		return forgeServer;
 	}
 
+	// EVENT HANDLERS
+	// Client
 	@SideOnly(Side.CLIENT)
 	public static void onReceiveServerRedBuilderMessage(String serverRedBuilderVersion) {
 		bestExecutionSide = Side.SERVER;
@@ -96,7 +106,8 @@ public class Handlers {
 		bestExecutionSide = Side.SERVER;
 		clientSideHandler = null;
 	}
-
+	
+	// Server
 	@SubscribeEvent
 	public void serverSideConnection(ServerConnectionFromClientEvent e) {
 		NetworkDispatcher dispatcher = NetworkDispatcher.get(e.getManager());

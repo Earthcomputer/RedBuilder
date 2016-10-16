@@ -2,9 +2,9 @@ package net.earthcomputer.redbuilder.network.handler;
 
 import java.util.List;
 
-import net.earthcomputer.redbuilder.IDelayedReturnSite;
-import net.earthcomputer.redbuilder.network.ClientChatUtils;
-import net.earthcomputer.redbuilder.network.CommonChatUtils;
+import net.earthcomputer.redbuilder.util.ClientChatUtils;
+import net.earthcomputer.redbuilder.util.CommonChatUtils;
+import net.earthcomputer.redbuilder.util.IDelayedReturnSite;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;

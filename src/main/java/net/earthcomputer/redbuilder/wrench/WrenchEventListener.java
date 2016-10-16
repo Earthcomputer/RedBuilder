@@ -1,13 +1,13 @@
 package net.earthcomputer.redbuilder.wrench;
 
-import net.earthcomputer.redbuilder.IDelayedReturnSite;
 import net.earthcomputer.redbuilder.IRedBuilderFeature;
 import net.earthcomputer.redbuilder.RedBuilder;
 import net.earthcomputer.redbuilder.network.ClientInstructionWrapper;
-import net.earthcomputer.redbuilder.network.CommonChatUtils;
 import net.earthcomputer.redbuilder.network.handler.Handlers;
 import net.earthcomputer.redbuilder.network.handler.IUniformInstructionHandler;
 import net.earthcomputer.redbuilder.network.handler.UnsupportedInstructionException;
+import net.earthcomputer.redbuilder.util.CommonChatUtils;
+import net.earthcomputer.redbuilder.util.IDelayedReturnSite;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;

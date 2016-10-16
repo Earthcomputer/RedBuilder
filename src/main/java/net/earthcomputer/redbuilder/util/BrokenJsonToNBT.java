@@ -1,4 +1,4 @@
-package net.earthcomputer.redbuilder;
+package net.earthcomputer.redbuilder.util;
 
 import java.util.Collections;
 import java.util.List;

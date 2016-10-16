@@ -16,14 +16,17 @@ import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = RedBuilder.MODID, name = RedBuilder.NAME, version = RedBuilder.VERSION, guiFactory = "net.earthcomputer.redbuilder.RedBuilderGuiFactory")
+@Mod(modid = RedBuilder.MODID, name = RedBuilder.NAME, version = RedBuilder.VERSION, guiFactory = "net.earthcomputer.redbuilder.gui.RedBuilderGuiFactory")
 public class RedBuilder {
+
+	// CONSTANTS
 	public static final String MODID = "redbuilder";
 	public static final String NAME = "Red Builder";
 	public static final String VERSION = "${version}";
 
 	public static final Logger LOGGER = LogManager.getLogger(NAME);
 
+	// GLOBAL VARIABLES
 	@Instance(RedBuilder.MODID)
 	private static RedBuilder INSTANCE;
 
@@ -34,6 +37,7 @@ public class RedBuilder {
 	@SidedProxy(clientSide = "net.earthcomputer.redbuilder.network.ClientProxy", serverSide = "net.earthcomputer.redbuilder.network.CommonProxy")
 	private static CommonProxy proxy;
 
+	// GLOBAL VARIABLES GETTERS AND SETTERS
 	public static RedBuilder instance() {
 		return INSTANCE;
 	}
@@ -62,6 +66,11 @@ public class RedBuilder {
 		this.creativeTab = creativeTab;
 	}
 
+	public static CommonProxy getProxy() {
+		return proxy;
+	}
+
+	// EVENT HANDLERS
 	@NetworkCheckHandler
 	public boolean acceptsRemote(Map<String, String> remoteMods, Side remoteSide) {
 		return true;

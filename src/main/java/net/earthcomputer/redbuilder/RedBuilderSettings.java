@@ -6,6 +6,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
+import net.earthcomputer.redbuilder.gui.TranslatedCycleValueEntry;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
@@ -16,7 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RedBuilderSettings {
 
-	public static final RedBuilderSettings INSTANCE = new RedBuilderSettings();
+	private static final RedBuilderSettings INSTANCE = new RedBuilderSettings();
 
 	public static boolean useCommandsForNonRedBuilderServers;
 
@@ -25,6 +26,10 @@ public class RedBuilderSettings {
 	public static EnumAntiWaterSetting antiWaterSetting;
 
 	private RedBuilderSettings() {
+	}
+	
+	public static RedBuilderSettings instance() {
+		return INSTANCE;
 	}
 
 	public static void readFromConfig(Configuration config) {

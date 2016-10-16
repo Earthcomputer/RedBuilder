@@ -27,16 +27,13 @@ public class SPacketTileEntityData implements IMessage {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		this.pos = new BlockPos(ByteBufUtils.readVarInt(buf, 4), ByteBufUtils.readVarInt(buf, 4),
-				ByteBufUtils.readVarInt(buf, 4));
+		this.pos = PacketUtils.readBlockPos(buf);
 		this.data = ByteBufUtils.readTag(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeVarInt(buf, pos.getX(), 4);
-		ByteBufUtils.writeVarInt(buf, pos.getY(), 4);
-		ByteBufUtils.writeVarInt(buf, pos.getZ(), 4);
+		PacketUtils.writeBlockPos(buf, pos);
 		ByteBufUtils.writeTag(buf, data);
 	}
 

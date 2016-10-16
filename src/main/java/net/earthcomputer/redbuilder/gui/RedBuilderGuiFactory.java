@@ -1,10 +1,11 @@
-package net.earthcomputer.redbuilder;
+package net.earthcomputer.redbuilder.gui;
 
 import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
 
+import net.earthcomputer.redbuilder.RedBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -15,7 +16,10 @@ import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.CategoryEntry;
 import net.minecraftforge.fml.client.config.IConfigElement;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class RedBuilderGuiFactory implements IModGuiFactory {
 
 	@Override

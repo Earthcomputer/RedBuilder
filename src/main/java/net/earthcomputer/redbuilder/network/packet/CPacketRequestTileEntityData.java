@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -24,15 +23,12 @@ public class CPacketRequestTileEntityData implements IMessage {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		pos = new BlockPos(ByteBufUtils.readVarInt(buf, 4), ByteBufUtils.readVarInt(buf, 4),
-				ByteBufUtils.readVarInt(buf, 4));
+		pos = PacketUtils.readBlockPos(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeVarInt(buf, pos.getX(), 4);
-		ByteBufUtils.writeVarInt(buf, pos.getY(), 4);
-		ByteBufUtils.writeVarInt(buf, pos.getZ(), 4);
+		PacketUtils.writeBlockPos(buf, pos);
 	}
 
 	public static class Handler implements IMessageHandler<CPacketRequestTileEntityData, IMessage> {

@@ -1,4 +1,4 @@
-package net.earthcomputer.redbuilder.network;
+package net.earthcomputer.redbuilder.util;
 
 import java.util.List;
 import java.util.Set;
@@ -9,8 +9,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import net.earthcomputer.redbuilder.BrokenJsonToNBT;
-import net.earthcomputer.redbuilder.IDelayedReturnSite;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

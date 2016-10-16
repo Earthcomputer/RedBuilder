@@ -4,9 +4,9 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import net.earthcomputer.redbuilder.IDelayedReturnSite;
 import net.earthcomputer.redbuilder.RedBuilder;
 import net.earthcomputer.redbuilder.network.packet.CPacketRequestTileEntityData;
+import net.earthcomputer.redbuilder.util.IDelayedReturnSite;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;

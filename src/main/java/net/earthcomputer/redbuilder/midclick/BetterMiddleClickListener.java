@@ -6,8 +6,8 @@ import com.google.common.collect.Maps;
 
 import net.earthcomputer.redbuilder.IRedBuilderFeature;
 import net.earthcomputer.redbuilder.RedBuilderSettings;
-import net.earthcomputer.redbuilder.network.ClientChatUtils;
 import net.earthcomputer.redbuilder.network.handler.Handlers;
+import net.earthcomputer.redbuilder.util.ClientChatUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

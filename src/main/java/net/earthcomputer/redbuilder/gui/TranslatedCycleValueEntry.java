@@ -1,11 +1,14 @@
-package net.earthcomputer.redbuilder;
+package net.earthcomputer.redbuilder.gui;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
-import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.ButtonEntry;
+import net.minecraftforge.fml.client.config.IConfigElement;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class TranslatedCycleValueEntry extends ButtonEntry {
 	protected final int beforeIndex;
 	protected final int defaultIndex;

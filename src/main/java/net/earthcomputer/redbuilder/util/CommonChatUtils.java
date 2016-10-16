@@ -1,4 +1,4 @@
-package net.earthcomputer.redbuilder.network;
+package net.earthcomputer.redbuilder.util;
 
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;

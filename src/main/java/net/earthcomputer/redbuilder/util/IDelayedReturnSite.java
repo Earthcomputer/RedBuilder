@@ -1,4 +1,4 @@
-package net.earthcomputer.redbuilder;
+package net.earthcomputer.redbuilder.util;
 
 public interface IDelayedReturnSite<T> {
 
