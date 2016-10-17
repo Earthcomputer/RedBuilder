@@ -32,6 +32,7 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -376,7 +377,8 @@ public class WrenchTurnRegistry {
 				IUniformInstructionHandler handler = Handlers
 						.getInstructionHandler(world.isRemote ? Side.CLIENT : Side.SERVER, player);
 				if (!handler.canSetTileEntityData()) {
-					// This should never happen because simulate should be true
+					// This should never happen because modifyWorld should be
+					// false in this case
 					throw new AssertionError();
 				} else {
 					try {
@@ -389,10 +391,14 @@ public class WrenchTurnRegistry {
 			}
 
 			private int getSkullRotation(TileEntitySkull tileEntity) {
-				// Must use reflection instead of the getter because the getter
-				// is @SideOnly(Side.CLIENT)
-				return ReflectionHelper.getPrivateValue(TileEntitySkull.class, tileEntity,
-						ReflectionNames.TileEntitySkull_skullRotation);
+				// The getter is @SideOnly(Side.CLIENT), may need to use
+				// reflection
+				if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+					return tileEntity.getSkullRotation();
+				} else {
+					return ReflectionHelper.getPrivateValue(TileEntitySkull.class, tileEntity,
+							ReflectionNames.TileEntitySkull_skullRotation);
+				}
 			}
 		});
 	}
