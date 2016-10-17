@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.block.BlockBanner;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockHorizontal;
@@ -12,6 +13,7 @@ import net.minecraft.block.BlockQuartz;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
+import net.minecraft.block.BlockStandingSign;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -243,6 +245,52 @@ public class WrenchTurnRegistry {
 					facing = rotateFacing(facing, axis, dir);
 				}
 				return state.withProperty(BlockTorch.FACING, facing);
+			}
+		});
+		// Standing signs
+		addFunction(new IWrenchFunction() {
+			@Override
+			public boolean applies(IBlockState state) {
+				return state.getProperties().containsKey(BlockStandingSign.ROTATION);
+			}
+
+			@Override
+			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
+				if (axis != Axis.Y) {
+					return state;
+				}
+
+				int rotation = state.getValue(BlockStandingSign.ROTATION);
+				rotation += dir.getOffset();
+				if (rotation > 15) {
+					rotation = 0;
+				} else if (rotation < 0) {
+					rotation = 15;
+				}
+				return state.withProperty(BlockStandingSign.ROTATION, rotation);
+			}
+		});
+		// Standing banners
+		addFunction(new IWrenchFunction() {
+			@Override
+			public boolean applies(IBlockState state) {
+				return state.getProperties().containsKey(BlockBanner.ROTATION);
+			}
+
+			@Override
+			public IBlockState turn(IBlockState state, Axis axis, AxisDirection dir) {
+				if (axis != Axis.Y) {
+					return state;
+				}
+
+				int rotation = state.getValue(BlockBanner.ROTATION);
+				rotation += dir.getOffset();
+				if (rotation > 15) {
+					rotation = 0;
+				} else if (rotation < 0) {
+					rotation = 15;
+				}
+				return state.withProperty(BlockBanner.ROTATION, rotation);
 			}
 		});
 	}
