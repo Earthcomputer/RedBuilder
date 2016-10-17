@@ -11,6 +11,7 @@ import com.google.common.collect.Maps;
 import net.earthcomputer.redbuilder.RedBuilder;
 import net.earthcomputer.redbuilder.RedBuilderSettings;
 import net.earthcomputer.redbuilder.network.packet.SPacketRedBuilderServer;
+import net.earthcomputer.redbuilder.util.ReflectionNames;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -106,7 +107,7 @@ public class Handlers {
 		bestExecutionSide = Side.SERVER;
 		clientSideHandler = null;
 	}
-	
+
 	// Server
 	@SubscribeEvent
 	public void serverSideConnection(ServerConnectionFromClientEvent e) {
@@ -114,9 +115,8 @@ public class Handlers {
 		EntityPlayerMP player = ((NetHandlerPlayServer) e.getHandler()).playerEntity;
 
 		Map<String, String> modList;
-		if ("MODDED".equals(
-				((Enum<?>) ReflectionHelper.getPrivateValue(NetworkDispatcher.class, dispatcher, "connectionType"))
-						.name())) {
+		if ("MODDED".equals(((Enum<?>) ReflectionHelper.getPrivateValue(NetworkDispatcher.class, dispatcher,
+				ReflectionNames.NetworkDispatcher_connectionType)).name())) {
 			modList = dispatcher.getModList();
 		} else {
 			modList = ImmutableMap.of();

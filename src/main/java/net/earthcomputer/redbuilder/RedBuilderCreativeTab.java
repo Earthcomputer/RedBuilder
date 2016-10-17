@@ -8,6 +8,7 @@ import org.lwjgl.input.Keyboard;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 
+import net.earthcomputer.redbuilder.util.ReflectionNames;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -105,14 +106,7 @@ public class RedBuilderCreativeTab extends CreativeTabs {
 			GuiContainerCreative gui = (GuiContainerCreative) e.getGui();
 			if (getSelectedTab(gui) == CreativeTabs.SEARCH) {
 				getItemList(gui).addAll(items);
-				try {
-					Method method = GuiContainerCreative.class.getDeclaredMethod("updateFilteredItems",
-							Class.forName("net.minecraft.client.gui.inventory.GuiContainerCreative$ContainerCreative"));
-					method.setAccessible(true);
-					method.invoke(gui, gui.inventorySlots);
-				} catch (Exception e1) {
-					throw Throwables.propagate(e1);
-				}
+				invokeUpdateFilteredItems(gui);
 			}
 		}
 	}
@@ -124,7 +118,8 @@ public class RedBuilderCreativeTab extends CreativeTabs {
 
 	@SideOnly(Side.CLIENT)
 	private static GuiTextField getSearchBar(GuiContainerCreative gui) {
-		return ReflectionHelper.getPrivateValue(GuiContainerCreative.class, gui, "searchField", "field_147062_A");
+		return ReflectionHelper.getPrivateValue(GuiContainerCreative.class, gui,
+				ReflectionNames.GuiContainerCreative_searchField);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -158,8 +153,21 @@ public class RedBuilderCreativeTab extends CreativeTabs {
 	private static List<ItemStack> getItemList(GuiContainerCreative gui) {
 		return ReflectionHelper.getPrivateValue(
 				ReflectionHelper.getClass(GuiContainerCreative.class.getClassLoader(),
-						"net.minecraft.client.gui.inventory.GuiContainerCreative$ContainerCreative"),
-				gui.inventorySlots, "itemList", "field_148330_a");
+						ReflectionNames.GuiContainerCreative_ContainerCreative),
+				gui.inventorySlots, ReflectionNames.GuiContainerCreative_ContainerCreative_itemList);
+	}
+
+	@SideOnly(Side.CLIENT)
+	private static void invokeUpdateFilteredItems(GuiContainerCreative gui) {
+		try {
+			Method method = GuiContainerCreative.class.getDeclaredMethod(
+					ReflectionNames.GuiContainerCreative_updateFilteredItems,
+					Class.forName(ReflectionNames.GuiContainerCreative_ContainerCreative));
+			method.setAccessible(true);
+			method.invoke(gui, gui.inventorySlots);
+		} catch (Exception e1) {
+			throw Throwables.propagate(e1);
+		}
 	}
 
 }
