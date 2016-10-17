@@ -138,15 +138,16 @@ public class WrenchEventListener implements IRedBuilderFeature {
 		World world = e.getWorld();
 		final BlockPos pos = e.getPos();
 		IBlockState state = world.getBlockState(pos);
-		final IBlockState turnedState = WrenchTurnRegistry.turn(state, turnDir.getAxis(horizontalPlayerFacing),
-				turnDir.getAxisDirection(horizontalPlayerFacing, reverse));
+		final IUniformInstructionHandler handler = Handlers.getInstructionHandler(e.getSide(), player);
+		final IBlockState turnedState = WrenchTurnRegistry.turn(world, pos, state,
+				turnDir.getAxis(horizontalPlayerFacing), turnDir.getAxisDirection(horizontalPlayerFacing, reverse),
+				player, handler.canSetTileEntityData());
 		// With reverse the server thinks the player has destroyed the block, we
 		// need to tell the server the block hasn't changed
 		if (e.getSide() == Side.CLIENT && turnedState.equals(state) && !reverse) {
 			return true;
 		}
 
-		final IUniformInstructionHandler handler = Handlers.getInstructionHandler(e.getSide(), player);
 		if (world.getTileEntity(pos) != null) {
 			if (!handler.canSetTileEntityData()) {
 				handler.displayMessage(CommonChatUtils.buildErrorMessage("redbuilder.wrench.tileentity"));
