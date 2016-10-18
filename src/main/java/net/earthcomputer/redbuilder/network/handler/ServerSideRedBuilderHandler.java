@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketBlockChange;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -41,7 +42,10 @@ public class ServerSideRedBuilderHandler implements IUniformInstructionHandler {
 			tileEntity.readFromNBT(tileEntityData);
 			for (EntityPlayerMP player : world.getPlayers(EntityPlayerMP.class, Predicates.alwaysTrue())) {
 				player.connection.sendPacket(new SPacketBlockChange(world, pos));
-				player.connection.sendPacket(tileEntity.getUpdatePacket());
+				SPacketUpdateTileEntity packet = tileEntity.getUpdatePacket();
+				if (packet != null) {
+					player.connection.sendPacket(packet);
+				}
 			}
 		}
 	}
